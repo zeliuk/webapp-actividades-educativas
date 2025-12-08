@@ -1,0 +1,13 @@
+{
+  "appName": "Plataforma de Actividades",
+  "login": "Iniciar sesión",
+  "login_btn": "Entrar",
+  "register": "Crear cuenta",
+  "email": "Email",
+  "password": "Contraseña",
+  "logout": "Cerrar sesión",
+  "welcome": "Bienvenido/a",
+  "googleLogin": "Entrar con Google",
+  "googleRegister": "Continuar con Google",
+  "sessionStartedAs": "Sesión iniciada como "
+}

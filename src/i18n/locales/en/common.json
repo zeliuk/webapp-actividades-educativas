@@ -1,0 +1,13 @@
+{
+  "appName": "Activities Platform",
+  "login": "Login",
+  "login_btn": "Sign in",
+  "register": "Create account",
+  "email": "Email",
+  "password": "Password",
+  "logout": "Log out",
+  "welcome": "Welcome",
+  "googleLogin": "Sign in with Google",
+  "googleRegister": "Continue with Google",
+  "sessionStartedAs": "Session started as "
+}
