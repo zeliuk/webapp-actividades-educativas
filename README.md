@@ -18,16 +18,16 @@ internacionalización y la arquitectura base para escalar.
 
 ## 🚀 Tecnologías principales
 
-  Tecnología                    Uso
-  ----------------------------- ----------------------------------
-  **Next.js (App Router)**      Framework principal del frontend
-  **Firebase Authentication**   Registro/login (email y Google)
-  **Firestore**                 Base de datos NoSQL
-  **TailwindCSS**               Estilos y diseño rápido
-  **react-hook-form**           Gestión de formularios
-  **Zod**                       Validación de formularios
-  **i18next**                   Internacionalización (ES/EN)
-  **Sonner**                    Sistema global de notificaciones
+Tecnología                    Uso
+----------------------------- ----------------------------------
+**Next.js (App Router)**      Framework principal del frontend
+**Firebase Authentication**   Registro/login (email y Google)
+**Firestore**                 Base de datos NoSQL
+**TailwindCSS**               Estilos y diseño rápido
+**react-hook-form**           Gestión de formularios
+**Zod**                       Validación de formularios
+**i18next**                   Internacionalización (ES/EN)
+**Sonner**                    Sistema global de notificaciones
 
 ------------------------------------------------------------------------
 
