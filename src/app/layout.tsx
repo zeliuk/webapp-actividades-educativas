@@ -1,9 +1,9 @@
 import "./globals.css";
 import type { ReactNode } from "react";
 import { AuthProvider } from "@/context/AuthContext";
-import "@tailwindplus/elements";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import TailwindElementsLoader from "@/components/TailwindElementsLoader";
 
 export const metadata = {
   title: "Plataforma educativa",
@@ -13,6 +13,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return ( 
     <html lang="es" className="h-full bg-gray-100">
       <body className="h-full">
+        <TailwindElementsLoader />
         <div className="min-h-full">
           <nav className="bg-gray-800">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
