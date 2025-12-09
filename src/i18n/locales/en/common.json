@@ -9,5 +9,6 @@
   "welcome": "Welcome",
   "googleLogin": "Sign in with Google",
   "googleRegister": "Continue with Google",
-  "sessionStartedAs": "Session started as "
+  "sessionStartedAs": "Session started as ",
+  "myActivities": "My Activities"
 }

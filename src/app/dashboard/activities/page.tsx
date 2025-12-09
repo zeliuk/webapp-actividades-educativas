@@ -1,0 +1,101 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useAuth } from "@/context/AuthContext";
+import { getUserActivities, deleteActivity } from "@/lib/activitiesService";
+import { Button } from "@/components/ui/Button";
+import Link from "next/link";
+import { toast } from "sonner";
+
+type Activity = {
+  id: string;
+  title?: string;
+  type?: string;
+  isPublic?: boolean;
+  data?: any;
+};
+
+export default function ActivitiesPage() {
+  const { user } = useAuth();
+  const [activities, setActivities] = useState<Activity[]>([]);
+
+  useEffect(() => {
+    // Si aún no hay usuario, no cargues nada
+    if (!user) return;
+
+    // TypeScript ahora sabe 100% que user no es null
+    const uid = user.uid;
+
+    async function load() {
+      const data = await getUserActivities(uid); 
+      setActivities(data);
+    }
+
+    load();
+  }, [user]);
+
+  async function handleDelete(id: string) {
+    await deleteActivity(id);
+    toast.success("Actividad eliminada");
+    setActivities((prev) => prev.filter((a) => a.id !== id));
+  }
+
+  return (
+    <main className="p-8">
+      <div className="flex justify-between mb-6">
+        <h1 className="text-2xl font-bold">Mis actividades</h1>
+
+        <Link href="/dashboard/activities/new">
+          <Button>Crear actividad</Button>
+        </Link>
+      </div>
+
+      <ul className="space-y-3">
+        {activities.map((a) => (
+          <li
+            key={a.id}
+            className="p-4 border rounded-lg flex justify-between items-center"
+          >
+            <div>
+              <h2 className="font-semibold">{a.title}</h2>
+              <p className="text-sm text-gray-500">{a.type}</p>
+            </div>
+
+            <div className="space-x-2">
+                {/* Resultados */}
+                <Link href={`/dashboard/activities/${a.id}/results`}>
+                    <Button variant="secondary">Resultados</Button>
+                </Link>
+
+                {/* Editar */}
+                <Link href={`/dashboard/activities/${a.id}`}>
+                    <Button variant="secondary">Editar</Button>
+                </Link>                
+
+                {/* Eliminar */}
+                <Button
+                    variant="secondary"
+                    onClick={() =>
+                        toast("¿Eliminar esta actividad?", {
+                        action: {
+                            label: "Sí",
+                            onClick: () => handleDelete(a.id),
+                        },
+                        })
+                    }
+                    >
+                    Eliminar
+                </Button>
+
+            </div>
+
+          </li>
+        ))}
+
+        {activities.length === 0 && (
+          <p className="text-gray-600">Aún no has creado ninguna actividad.</p>
+        )}
+      </ul>
+    </main>
+  );
+}

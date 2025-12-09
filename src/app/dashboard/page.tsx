@@ -3,12 +3,13 @@
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/Button";
 import { logoutUser } from "@/lib/authService";
+import Link from "next/link"; // ⬅️ IMPORTANTE
 
 import { useTranslation } from "react-i18next";
 import "@/i18n";
 
 export default function DashboardPage() {
-  const { t } = useTranslation("common"); // ✔️ Hook dentro
+  const { t } = useTranslation("common");
   const { user } = useAuth();
 
   return (
@@ -19,9 +20,17 @@ export default function DashboardPage() {
         {t("sessionStartedAs")} <strong>{user?.email}</strong>
       </p>
 
-      <Button onClick={logoutUser}>
-        {t("logout")}
-      </Button>
+      <div className="flex flex-col gap-4">
+        {/* 👉 Botón para ir a actividades */}
+        <Link href="/dashboard/activities">
+          <Button>{t("myActivities") ?? "Mis actividades"}</Button>
+        </Link>
+
+        {/* 👉 Botón de logout */}
+        <Button onClick={logoutUser}>
+          {t("logout")}
+        </Button>
+      </div>
     </main>
   );
 }
