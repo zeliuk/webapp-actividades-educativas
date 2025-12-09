@@ -62,58 +62,58 @@ export default function PreviewPage({
     load();
   }, [id, user, router]);
 
-  if (!activity) return <p className="p-8">Cargando...</p>;
+  if (!activity) return <p className="p-6">Cargando...</p>;
 
   return (
-    <main className="p-8 max-w-2xl mx-auto">
-      <AuthCard title={`Vista previa: ${activity.title}`}>
-        
-        <p className="text-sm text-gray-500 mb-4">
-          Idioma: {activity.language === "es" ? "Español" : "Inglés"}
-        </p>
+    <main className="p-6">
+      <section className="max-w-4xl mx-auto space-y-6">
+        <h1 className="text-2xl font-semibold mb-6">
+          Vista previa: {activity.title}
+        </h1>
 
-        <div className="space-y-6">
-          {activity.data.questions.map((q, i) => (
-            <div key={i} className="border p-4 rounded-lg">
-              <h3 className="font-semibold mb-2">Pregunta {i + 1}</h3>
-              <p className="mb-3">{q.question}</p>
+        <AuthCard title="Contenido de la actividad">
+          <p className="text-sm text-gray-500 mb-4">
+            Idioma: {activity.language === "es" ? "Español" : "Inglés"}
+          </p>
 
-              <ul className="space-y-1">
-                {q.options.map((opt, j) => (
-                  <li
-                    key={j}
-                    className="border rounded-lg p-2 bg-white"
-                  >
-                    {opt}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
+          <div className="space-y-6">
+            {activity.data.questions.map((q, i) => (
+              <div key={i} className="border p-4 rounded-lg">
+                <h3 className="font-semibold mb-2">Pregunta {i + 1}</h3>
+                <p className="mb-3">{q.question}</p>
 
-        {/* Bottom buttons */}
-        <div className="mt-6 flex justify-between">
-          <Button onClick={() => router.push(`/dashboard/activities/${id}`)}>
-            Volver al editor
-          </Button>
+                <ul className="space-y-1">
+                  {q.options.map((opt, j) => (
+                    <li
+                      key={j}
+                      className="border rounded-lg p-2 bg-white"
+                    >
+                      {opt}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
 
-          <Button
-            variant="secondary"
-            onClick={async () => {
+          <div className="mt-6 flex justify-between">
+            <Button onClick={() => router.push(`/dashboard/activities/${id}`)}>
+              Volver al editor
+            </Button>
+
+            <Button
+              variant="secondary"
+              onClick={async () => {
                 const url = `${window.location.origin}/a/${id}`;
                 await navigator.clipboard.writeText(url);
                 toast.success("Enlace copiado al portapapeles");
-            }}
+              }}
             >
-            Copiar enlace para alumnos
+              Copiar enlace para alumnos
             </Button>
-
-
-
-
-        </div>
-      </AuthCard>
+          </div>
+        </AuthCard>
+      </section>
     </main>
   );
 }

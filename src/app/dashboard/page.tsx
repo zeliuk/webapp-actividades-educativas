@@ -13,24 +13,26 @@ export default function DashboardPage() {
   const { user } = useAuth();
 
   return (
-    <main className="min-h-screen p-8">
-      <h1 className="text-3xl font-bold mb-4">{t("welcome")}</h1>
+    <main className="p-6">
+      <section className="max-w-4xl mx-auto space-y-6">
+        <h1 className="text-2xl font-semibold mb-6">{t("welcome")}</h1>
 
-      <p className="text-gray-700 mb-6">
-        {t("sessionStartedAs")} <strong>{user?.email}</strong>
-      </p>
+        <p className="text-gray-700">
+          {t("sessionStartedAs")} <strong>{user?.email}</strong>
+        </p>
 
-      <div className="flex flex-col gap-4">
-        {/* 👉 Botón para ir a actividades */}
-        <Link href="/dashboard/activities">
-          <Button>{t("myActivities") ?? "Mis actividades"}</Button>
-        </Link>
+        <div className="flex flex-col gap-6">
+          {/* 👉 Botón para ir a actividades */}
+          <Link href="/dashboard/activities">
+            <Button>{t("myActivities") ?? "Mis actividades"}</Button>
+          </Link>
 
-        {/* 👉 Botón de logout */}
-        <Button onClick={logoutUser}>
-          {t("logout")}
-        </Button>
-      </div>
+          {/* 👉 Botón de logout */}
+          <Button onClick={logoutUser}>
+            {t("logout")}
+          </Button>
+        </div>
+      </section>
     </main>
   );
 }

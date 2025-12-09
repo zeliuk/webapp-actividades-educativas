@@ -41,61 +41,61 @@ export default function ActivitiesPage() {
   }
 
   return (
-    <main className="p-8">
-      <div className="flex justify-between mb-6">
-        <h1 className="text-2xl font-bold">Mis actividades</h1>
+    <main className="p-6">
+      <section className="max-w-4xl mx-auto space-y-6">
+        <div className="flex items-center justify-between gap-6">
+          <h1 className="text-2xl font-semibold mb-6">Mis actividades</h1>
 
-        <Link href="/dashboard/activities/new">
-          <Button>Crear actividad</Button>
-        </Link>
-      </div>
+          <Link href="/dashboard/activities/new">
+            <Button>Crear actividad</Button>
+          </Link>
+        </div>
 
-      <ul className="space-y-3">
-        {activities.map((a) => (
-          <li
-            key={a.id}
-            className="p-4 border rounded-lg flex justify-between items-center"
-          >
-            <div>
-              <h2 className="font-semibold">{a.title}</h2>
-              <p className="text-sm text-gray-500">{a.type}</p>
-            </div>
+        <ul className="space-y-3">
+          {activities.map((a) => (
+            <li
+              key={a.id}
+              className="p-4 border rounded-lg flex justify-between items-center"
+            >
+              <div>
+                <h2 className="font-semibold">{a.title}</h2>
+                <p className="text-sm text-gray-500">{a.type}</p>
+              </div>
 
-            <div className="space-x-2">
+              <div className="flex flex-wrap gap-3 justify-end">
                 {/* Resultados */}
                 <Link href={`/dashboard/activities/${a.id}/results`}>
-                    <Button variant="secondary">Resultados</Button>
+                  <Button variant="secondary">Resultados</Button>
                 </Link>
 
                 {/* Editar */}
                 <Link href={`/dashboard/activities/${a.id}`}>
-                    <Button variant="secondary">Editar</Button>
-                </Link>                
+                  <Button variant="secondary">Editar</Button>
+                </Link>
 
                 {/* Eliminar */}
                 <Button
-                    variant="secondary"
-                    onClick={() =>
-                        toast("¿Eliminar esta actividad?", {
-                        action: {
-                            label: "Sí",
-                            onClick: () => handleDelete(a.id),
-                        },
-                        })
-                    }
-                    >
-                    Eliminar
+                  variant="secondary"
+                  onClick={() =>
+                    toast("¿Eliminar esta actividad?", {
+                      action: {
+                        label: "Sí",
+                        onClick: () => handleDelete(a.id),
+                      },
+                    })
+                  }
+                >
+                  Eliminar
                 </Button>
+              </div>
+            </li>
+          ))}
 
-            </div>
-
-          </li>
-        ))}
-
-        {activities.length === 0 && (
-          <p className="text-gray-600">Aún no has creado ninguna actividad.</p>
-        )}
-      </ul>
+          {activities.length === 0 && (
+            <p className="text-gray-600">Aún no has creado ninguna actividad.</p>
+          )}
+        </ul>
+      </section>
     </main>
   );
 }

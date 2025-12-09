@@ -230,12 +230,15 @@ export default function ActivityEditorPage({
   }
 
   if (loading || !activity) {
-    return <p className="p-8">Cargando...</p>;
+    return <p className="p-6">Cargando...</p>;
   }
 
   return (
-    <main className="p-8 mx-auto max-w-2xl">
-      <AuthCard title="Editor de actividad">
+    <main className="p-6">
+      <section className="max-w-4xl mx-auto space-y-6">
+        <h1 className="text-2xl font-semibold mb-6">Editor de actividad</h1>
+
+        <AuthCard title="Detalles de la actividad">
 
         {/* Título */}
         <Input
@@ -358,22 +361,21 @@ export default function ActivityEditorPage({
 
         {/* Botones inferiores */}
         <div className="mt-6 flex justify-between">
-        <Button onClick={addQuestion}>Añadir pregunta</Button>
+          <Button onClick={addQuestion}>Añadir pregunta</Button>
 
-        <div className="flex gap-3">
+          <div className="flex gap-6">
             {/* Botón de PREVIEW */}
             <Link href={`/dashboard/activities/${activity.id}/preview`}>
-            <Button variant="secondary">
-                Preview
-            </Button>
+              <Button variant="secondary">Preview</Button>
             </Link>
 
             {/* Botón de guardar */}
             <Button onClick={handleSave}>Guardar cambios</Button>
-        </div>
+          </div>
         </div>
 
       </AuthCard>
+      </section>
     </main>
   );
 }

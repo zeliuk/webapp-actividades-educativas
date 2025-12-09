@@ -130,104 +130,112 @@ export default function ActivityPublicPage({
   // PANTALLA 1 — Pedir nombre
   if (!confirmedName) {
     return (
-      <main className="p-8 max-w-md mx-auto">
-        <AuthCard title="Antes de comenzar">
-          <p className="mb-4 text-gray-600">Introduce tu nombre para continuar:</p>
+      <main className="p-6">
+        <section className="max-w-4xl mx-auto space-y-6">
+          <h1 className="text-2xl font-semibold mb-6">Participar en la actividad</h1>
 
-          <input
-            className="border p-2 rounded w-full mb-4"
-            placeholder="Tu nombre"
-            value={studentName}
-            onChange={(e) => setStudentName(e.target.value)}
-          />
+          <AuthCard title="Antes de comenzar">
+            <p className="mb-4 text-gray-600">Introduce tu nombre para continuar:</p>
 
-          <Button
-            full
-            onClick={() => {
-              if (!studentName.trim()) {
-                toast.error("Escribe tu nombre");
-                return;
-              }
-              setConfirmedName(true);
-            }}
-          >
-            Empezar actividad
-          </Button>
-        </AuthCard>
+            <input
+              className="border p-2 rounded w-full mb-4"
+              placeholder="Tu nombre"
+              value={studentName}
+              onChange={(e) => setStudentName(e.target.value)}
+            />
+
+            <Button
+              full
+              onClick={() => {
+                if (!studentName.trim()) {
+                  toast.error("Escribe tu nombre");
+                  return;
+                }
+                setConfirmedName(true);
+              }}
+            >
+              Empezar actividad
+            </Button>
+          </AuthCard>
+        </section>
       </main>
     );
   }
 
-  if (!activity) return <p className="p-8">Cargando...</p>;
+  if (!activity) return <p className="p-6">Cargando...</p>;
 
   // PANTALLA 2 — Actividad interactiva
   return (
-    <main className="p-8 max-w-2xl mx-auto">
-      <AuthCard title={activity.title}>
-        <p className="text-sm text-gray-500 mb-4">
-          Alumno: <strong>{studentName}</strong>
-        </p>
+    <main className="p-6">
+      <section className="max-w-4xl mx-auto space-y-6">
+        <h1 className="text-2xl font-semibold mb-6">{activity.title}</h1>
 
-        {/* LISTA DE PREGUNTAS INTERACTIVA */}
-        {activity.data.questions.map((q, i) => (
-          <div key={i} className="border p-4 rounded-lg mb-4">
-            <h3 className="font-semibold mb-2">Pregunta {i + 1}</h3>
-            <p className="mb-3">{q.question}</p>
+        <AuthCard title="Actividad">
+          <p className="text-sm text-gray-500 mb-4">
+            Alumno: <strong>{studentName}</strong>
+          </p>
 
-            <ul className="space-y-2">
-              {q.options.map((opt, j) => {
-                const isSelected = answers[i] === j;
-                const isCorrect = submitted && j === q.correctIndex;
-                const isWrong =
-                  submitted && isSelected && j !== q.correctIndex;
+          {/* LISTA DE PREGUNTAS INTERACTIVA */}
+          {activity.data.questions.map((q, i) => (
+            <div key={i} className="border p-4 rounded-lg mb-6">
+              <h3 className="font-semibold mb-2">Pregunta {i + 1}</h3>
+              <p className="mb-3">{q.question}</p>
 
-                return (
-                  <li
-                    key={j}
-                    onClick={() => selectAnswer(i, j)}
-                    className={`
+              <ul className="space-y-2">
+                {q.options.map((opt, j) => {
+                  const isSelected = answers[i] === j;
+                  const isCorrect = submitted && j === q.correctIndex;
+                  const isWrong =
+                    submitted && isSelected && j !== q.correctIndex;
+
+                  return (
+                    <li
+                      key={j}
+                      onClick={() => selectAnswer(i, j)}
+                      className={`
                       p-2 border rounded-lg cursor-pointer
                       transition
                       ${isSelected && !submitted ? "bg-blue-100 border-blue-500" : ""}
                       ${isCorrect ? "bg-green-200 border-green-600" : ""}
                       ${isWrong ? "bg-red-200 border-red-600" : ""}
                     `}
-                  >
-                    {opt}
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        ))}
+                    >
+                      {opt}
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          ))}
 
-        {/* BOTÓN PARA ENVIAR LA ACTIVIDAD */}
-        {!submitted ? (
-          <Button full onClick={submitAnswers}>
-            Enviar respuestas
-          </Button>
-        ) : (
-          <div className="text-center mt-6">
-            <h2 className="text-xl font-bold">
-              Resultado: {score} / {activity.data.questions.length}
-            </h2>
+          {/* BOTÓN PARA ENVIAR LA ACTIVIDAD */}
+          {!submitted ? (
+            <Button full onClick={submitAnswers}>
+              Enviar respuestas
+            </Button>
+          ) : (
+            <div className="text-center mt-6 space-y-2">
+              <h2 className="text-xl font-bold">
+                Resultado: {score} / {activity.data.questions.length}
+              </h2>
 
-            <p className="text-gray-600 mt-2">
-              {(() => {
-                const safeScore = score ?? 0;
+              <p className="text-gray-600 mt-2">
+                {(() => {
+                  const safeScore = score ?? 0;
 
-                if (safeScore === activity.data.questions.length)
-                  return "¡Perfecto! 🎉";
+                  if (safeScore === activity.data.questions.length)
+                    return "¡Perfecto! 🎉";
 
-                if (safeScore >= activity.data.questions.length / 2)
-                  return "¡Buen trabajo! 👍";
+                  if (safeScore >= activity.data.questions.length / 2)
+                    return "¡Buen trabajo! 👍";
 
-                return "Sigue practicando 💪";
-              })()}
-            </p>
-          </div>
-        )}
-      </AuthCard>
+                  return "Sigue practicando 💪";
+                })()}
+              </p>
+            </div>
+          )}
+        </AuthCard>
+      </section>
     </main>
   );
 }

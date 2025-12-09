@@ -49,39 +49,45 @@ export default function RegisterPage() {
   }
 
   return (
-    <AuthCard title={t("register")}>
-      <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
-        <Input
-          label={t("email")}
-          type="email"
-          {...register("email")}
-          error={errors.email?.message}
-        />
+    <main className="p-6">
+      <section className="max-w-4xl mx-auto space-y-6">
+        <h1 className="text-2xl font-semibold mb-6">{t("register")}</h1>
 
-        <Input
-          label={t("password")}
-          type="password"
-          {...register("password")}
-          error={errors.password?.message}
-        />
+        <AuthCard title={t("register")}> 
+          <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+            <Input
+              label={t("email")}
+              type="email"
+              {...register("email")}
+              error={errors.email?.message}
+            />
 
-        <Button type="submit" full disabled={isSubmitting}>
-          {t("register")}
-        </Button>
-      </form>
+            <Input
+              label={t("password")}
+              type="password"
+              {...register("password")}
+              error={errors.password?.message}
+            />
 
-      <div className="mt-4">
-        <Button variant="secondary" full onClick={handleGoogle}>
-          {t("googleRegister")}
-        </Button>
-      </div>
+            <Button type="submit" full disabled={isSubmitting}>
+              {t("register")}
+            </Button>
+          </form>
 
-      <p className="text-sm text-center mt-4 text-gray-600">
-        ¿Ya tienes cuenta?{" "}
-        <a href="/login" className="text-blue-600 hover:underline">
-          {t("login")}
-        </a>
-      </p>
-    </AuthCard>
+          <div className="mt-6">
+            <Button variant="secondary" full onClick={handleGoogle}>
+              {t("googleRegister")}
+            </Button>
+          </div>
+
+          <p className="text-sm text-center mt-6 text-gray-600">
+            ¿Ya tienes cuenta?{" "}
+            <a href="/login" className="text-blue-600 hover:underline">
+              {t("login")}
+            </a>
+          </p>
+        </AuthCard>
+      </section>
+    </main>
   );
 }

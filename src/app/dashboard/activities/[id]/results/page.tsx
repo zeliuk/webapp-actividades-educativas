@@ -85,83 +85,89 @@ export default function ActivityResultsPage({
     load();
   }, [id, router]);
 
-  if (loading) return <p className="p-8">Cargando...</p>;
+  if (loading) return <p className="p-6">Cargando...</p>;
   if (!activity) return null;
 
   return (
-    <main className="p-8 max-w-3xl mx-auto">
-      <AuthCard title={`Resultados — ${activity.title}`}>
+    <main className="p-6">
+      <section className="max-w-4xl mx-auto space-y-6">
+        <h1 className="text-2xl font-semibold mb-6">
+          Resultados — {activity.title}
+        </h1>
 
-        <Button
-          variant="secondary"
-          className="mb-6"
-          onClick={() => router.push(`/dashboard/activities/${id}`)}
-        >
-          Volver al editor
-        </Button>
+        <AuthCard title="Intentos de los alumnos">
 
-        {/* TABLE OF ATTEMPTS */}
-        {attempts.length === 0 ? (
-          <p className="text-gray-500">Aún no hay intentos.</p>
-        ) : (
-          <table className="w-full border rounded-lg">
-            <thead>
-              <tr className="bg-gray-100">
-                <th className="p-2 text-left">Alumno</th>
-                <th className="p-2 text-left">Fecha</th>
-                <th className="p-2 text-left">Aciertos</th>
-                <th className="p-2 text-left">% Nota</th>
-              </tr>
-            </thead>
-            <tbody>
-              {attempts.map((a) => (
-                <tr key={a.id} className="border-t">
-                  <td className="p-2">{a.name}</td>
-                  <td className="p-2">{a.createdAt}</td>
-                  <td className="p-2">
-                    {a.correct}/{a.total}
-                  </td>
-                  <td className="p-2">{a.percentage}%</td>
+          <Button
+            variant="secondary"
+            className="mb-6"
+            onClick={() => router.push(`/dashboard/activities/${id}`)}
+          >
+            Volver al editor
+          </Button>
+
+          {/* TABLE OF ATTEMPTS */}
+          {attempts.length === 0 ? (
+            <p className="text-gray-500">Aún no hay intentos.</p>
+          ) : (
+            <table className="w-full border rounded-lg">
+              <thead>
+                <tr className="bg-gray-100">
+                  <th className="p-2 text-left">Alumno</th>
+                  <th className="p-2 text-left">Fecha</th>
+                  <th className="p-2 text-left">Aciertos</th>
+                  <th className="p-2 text-left">% Nota</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-        {/* QUESTION STATISTICS */}
-        <div className="mt-10">
-        <h2 className="text-xl font-bold mb-4">Estadísticas por pregunta</h2>
+              </thead>
+              <tbody>
+                {attempts.map((a) => (
+                  <tr key={a.id} className="border-t">
+                    <td className="p-2">{a.name}</td>
+                    <td className="p-2">{a.createdAt}</td>
+                    <td className="p-2">
+                      {a.correct}/{a.total}
+                    </td>
+                    <td className="p-2">{a.percentage}%</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
 
-        {activity.data.questions.map((q, index) => {
-            let total = attempts.length;
-            let correct = attempts.filter(
-            (a) => a.answers && a.answers[index] === q.correctIndex
-            ).length;
+          <div className="mt-10 space-y-4">
+            <h2 className="text-xl font-bold">Estadísticas por pregunta</h2>
 
-            let percentage = total === 0 ? 0 : Math.round((correct / total) * 100);
+            {activity.data.questions.map((q, index) => {
+                let total = attempts.length;
+                let correct = attempts.filter(
+                (a) => a.answers && a.answers[index] === q.correctIndex
+                ).length;
 
-            return (
-            <div key={index} className="border p-4 rounded-lg mb-4">
-                <h3 className="font-semibold">
-                Pregunta {index + 1}: {q.question}
-                </h3>
+                let percentage = total === 0 ? 0 : Math.round((correct / total) * 100);
 
-                <p className="mt-2 text-gray-700">
-                {correct} de {total} alumnos respondieron bien —{" "}
-                <strong>{percentage}%</strong>
-                </p>
+                return (
+                <div key={index} className="border p-4 rounded-lg">
+                    <h3 className="font-semibold">
+                    Pregunta {index + 1}: {q.question}
+                    </h3>
 
-                <div
-                className={`mt-2 h-3 rounded-full ${
-                    percentage >= 60 ? "bg-green-400" : "bg-red-400"
-                }`}
-                style={{ width: `${percentage}%`, transition: "0.4s" }}
-                ></div>
-            </div>
-            );
-        })}
-        </div>
+                    <p className="mt-2 text-gray-700">
+                    {correct} de {total} alumnos respondieron bien —{" "}
+                    <strong>{percentage}%</strong>
+                    </p>
 
-      </AuthCard>
+                    <div
+                    className={`mt-2 h-3 rounded-full ${
+                        percentage >= 60 ? "bg-green-400" : "bg-red-400"
+                    }`}
+                    style={{ width: `${percentage}%`, transition: "0.4s" }}
+                    ></div>
+                </div>
+                );
+            })}
+          </div>
+
+        </AuthCard>
+      </section>
     </main>
   );
 }

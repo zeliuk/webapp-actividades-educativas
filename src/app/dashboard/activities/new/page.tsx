@@ -54,43 +54,47 @@ export default function NewActivityPage() {
   }
 
   return (
-    <main className="min-h-screen p-8 flex justify-center">
-      <AuthCard title="Crear actividad">
-        <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
-          <Input
-            label="Título"
-            {...register("title")}
-            error={formState.errors.title?.message}
-          />
+    <main className="p-6">
+      <section className="max-w-4xl mx-auto space-y-6">
+        <h1 className="text-2xl font-semibold mb-6">Crear actividad</h1>
 
-          <div>
-            <label className="block mb-1 font-medium">Tipo</label>
-            <select {...register("type")} className="w-full p-2 border rounded-lg">
-              <option value="quiz">Quiz</option>
-            </select>
-          </div>
+        <AuthCard title="Detalles de la actividad">
+          <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+            <Input
+              label="Título"
+              {...register("title")}
+              error={formState.errors.title?.message}
+            />
 
-          <div>
-            <label className="block mb-1 font-medium">Idioma de la actividad</label>
-            <select
+            <div className="space-y-2">
+              <label className="block font-medium">Tipo</label>
+              <select {...register("type")} className="w-full p-2 border rounded-lg">
+                <option value="quiz">Quiz</option>
+              </select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="block font-medium">Idioma de la actividad</label>
+              <select
                 {...register("language")}
                 className="w-full p-2 border rounded-lg"
-            >
+              >
                 <option value="es">Español</option>
                 <option value="en">Inglés</option>
-            </select>
-        </div>
+              </select>
+            </div>
 
-          <div className="flex items-center space-x-2">
-            <input type="checkbox" id="isPublic" {...register("isPublic")} />
-            <label htmlFor="isPublic">Hacer pública</label>
-          </div>
+            <div className="flex items-center gap-2">
+              <input type="checkbox" id="isPublic" {...register("isPublic")} />
+              <label htmlFor="isPublic">Hacer pública</label>
+            </div>
 
-          <Button type="submit" full disabled={formState.isSubmitting}>
-            Crear actividad
-          </Button>
-        </form>
-      </AuthCard>
+            <Button type="submit" full disabled={formState.isSubmitting}>
+              Crear actividad
+            </Button>
+          </form>
+        </AuthCard>
+      </section>
     </main>
   );
 }
