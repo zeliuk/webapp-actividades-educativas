@@ -7,11 +7,13 @@ type WebComponentProps = React.HTMLAttributes<HTMLElement> & {
 };
 
 declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      "el-dropdown": WebComponentProps;
-      "el-menu": WebComponentProps;
-      "el-disclosure": WebComponentProps;
+  namespace React {
+    namespace JSX {
+      interface IntrinsicElements {
+        "el-dropdown": WebComponentProps;
+        "el-menu": WebComponentProps;
+        "el-disclosure": WebComponentProps;
+      }
     }
   }
 }
