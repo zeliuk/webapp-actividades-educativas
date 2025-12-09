@@ -4,15 +4,24 @@ import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/Button";
 import { logoutUser } from "@/lib/authService";
 import Link from "next/link"; // ⬅️ IMPORTANTE
+import Header from "@/components/Header";
 
 import { useTranslation } from "react-i18next";
 import "@/i18n";
+
 
 export default function DashboardPage() {
   const { t } = useTranslation("common");
   const { user } = useAuth();
 
   return (
+    <>
+    <Header title="Dashboard" />
+    <main>
+      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+     CONTENIDO
+      </div>
+    </main>
     <main className="min-h-screen p-8">
       <h1 className="text-3xl font-bold mb-4">{t("welcome")}</h1>
 
@@ -31,6 +40,6 @@ export default function DashboardPage() {
           {t("logout")}
         </Button>
       </div>
-    </main>
+    </main></>
   );
 }
