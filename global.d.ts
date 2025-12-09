@@ -1,7 +1,17 @@
+import type React from "react";
+
+type WebComponentProps = React.HTMLAttributes<HTMLElement> & {
+  class?: string;
+  anchor?: string;
+  popover?: boolean | string;
+};
+
 declare namespace JSX {
   interface IntrinsicElements {
-    "el-dropdown": any;
-    "el-menu": any;
-    "el-disclosure": any;
+    "el-dropdown": WebComponentProps;
+    "el-menu": WebComponentProps;
+    "el-disclosure": WebComponentProps;
   }
 }
+
+export {};
