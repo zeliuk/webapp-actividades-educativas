@@ -41,7 +41,7 @@ export default function ActivitiesPage() {
   }
 
   return (
-    <main className="p-8">
+    <div className="p-8">
       <div className="flex justify-between mb-6">
         <h1 className="text-2xl font-bold">Mis actividades</h1>
 
@@ -96,6 +96,6 @@ export default function ActivitiesPage() {
           <p className="text-gray-600">Aún no has creado ninguna actividad.</p>
         )}
       </ul>
-    </main>
+    </div>
   );
 }

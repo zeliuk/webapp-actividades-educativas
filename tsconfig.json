@@ -20,7 +20,8 @@
     ],
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "types": ["./global"]
   },
   "include": [
     "next-env.d.ts",
@@ -28,7 +29,10 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "**/*.mts"
+    "**/*.mts",
+    "**/*.d.ts",
+    "global.d.ts",
+    "src"
   ],
   "exclude": ["node_modules"]
 }
