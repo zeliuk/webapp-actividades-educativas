@@ -6,11 +6,13 @@ type WebComponentProps = React.HTMLAttributes<HTMLElement> & {
   popover?: boolean | string;
 };
 
-declare namespace JSX {
-  interface IntrinsicElements {
-    "el-dropdown": WebComponentProps;
-    "el-menu": WebComponentProps;
-    "el-disclosure": WebComponentProps;
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      "el-dropdown": WebComponentProps;
+      "el-menu": WebComponentProps;
+      "el-disclosure": WebComponentProps;
+    }
   }
 }
 
