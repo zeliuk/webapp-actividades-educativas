@@ -37,8 +37,8 @@ export default function NavBar() {
             <div className="shrink-0">
               <Link href="/">
                 <img
-                  className="size-8"
-                  src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
+                  className="size-10"
+                  src="/148980.svg"
                   alt="EduApp"
                 />
               </Link>
