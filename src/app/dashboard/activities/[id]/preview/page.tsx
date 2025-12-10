@@ -7,6 +7,7 @@ import { getActivityById } from "@/lib/activitiesService";
 import { Button } from "@/components/ui/Button";
 import { AuthCard } from "@/components/AuthCard";
 import { toast } from "sonner";
+import Header from "@/components/Header";
 
 type Question = {
   question: string;
@@ -65,55 +66,63 @@ export default function PreviewPage({
   if (!activity) return <p className="p-8">Cargando...</p>;
 
   return (
-    <main className="p-8 max-w-2xl mx-auto">
-      <AuthCard title={`Vista previa: ${activity.title}`}>
-        
-        <p className="text-sm text-gray-500 mb-4">
-          Idioma: {activity.language === "es" ? "Español" : "Inglés"}
-        </p>
+    <>
+      <Header title={`Vista previa: ${activity.title}`} />
+      <main className="flex-1 pt-35">
+        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
 
-        <div className="space-y-6">
-          {activity.data.questions.map((q, i) => (
-            <div key={i} className="border p-4 rounded-lg">
-              <h3 className="font-semibold mb-2">Pregunta {i + 1}</h3>
-              <p className="mb-3">{q.question}</p>
 
-              <ul className="space-y-1">
-                {q.options.map((opt, j) => (
-                  <li
-                    key={j}
-                    className="border rounded-lg p-2 bg-white"
-                  >
-                    {opt}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
 
-        {/* Bottom buttons */}
-        <div className="mt-6 flex justify-between">
-          <Button onClick={() => router.push(`/dashboard/activities/${id}`)}>
-            Volver al editor
-          </Button>
+          <p className="text-sm text-gray-500 mb-4">
+            Idioma: {activity.language === "es" ? "Español" : "Inglés"}
+          </p>
 
-          <Button
-            variant="secondary"
-            onClick={async () => {
+          <div className="space-y-6">
+            {activity.data.questions.map((q, i) => (
+              <div key={i} className="border p-4 rounded-sm  bg-white">
+                <h3 className="font-semibold mb-2">Pregunta {i + 1}</h3>
+                <p className="mb-3">{q.question}</p>
+
+                <ul className="space-y-1">
+                  {q.options.map((opt, j) => (
+                    <li
+                      key={j}
+                      className="border rounded-sm p-2"
+                    >
+                      {opt}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+
+          {/* Bottom buttons */}
+          <div className="mt-6 flex justify-between">
+            <Button onClick={() => router.push(`/dashboard/activities/${id}`)}>
+              Volver al editor
+            </Button>
+
+            <Button
+              variant="secondary"
+              onClick={async () => {
                 const url = `${window.location.origin}/a/${id}`;
                 await navigator.clipboard.writeText(url);
                 toast.success("Enlace copiado al portapapeles");
-            }}
+              }}
             >
-            Copiar enlace para alumnos
+              Copiar enlace para alumnos
             </Button>
 
 
 
 
+          </div>
+
+
         </div>
-      </AuthCard>
-    </main>
+      </main>
+    </>
+
   );
 }

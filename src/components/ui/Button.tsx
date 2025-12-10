@@ -4,6 +4,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   full?: boolean;
 }
 
+
 export function Button({
   children,
   variant = "primary",
@@ -11,11 +12,11 @@ export function Button({
   ...props
 }: ButtonProps) {
   const base =
-    "px-4 py-2 rounded-lg font-medium transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed";
+    "rounded-md bg-cyan-700 px-3 py-2 text-sm font-medium transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed";
 
   const variants = {
-    primary: "bg-blue-600 text-white hover:bg-blue-700",
-    secondary: "bg-gray-200 text-gray-700 hover:bg-gray-300",
+    primary: "text-white hover:bg-cyan-900 hover:text-white",
+    secondary: "bg-cyan-700/6 text-gray-700 hover:bg-cyan-700/15",
   };
 
   return (

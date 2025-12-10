@@ -8,6 +8,7 @@ import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { AuthCard } from "@/components/AuthCard";
 import { Button } from "@/components/ui/Button";
 import { toast } from "sonner";
+import Header from "@/components/Header";
 
 type Attempt = {
   id: string;
@@ -67,15 +68,15 @@ export default function ActivityResultsPage({
       const data: Attempt[] = snap.docs.map((doc) => {
         const d = doc.data();
         return {
-            id: doc.id,
-            name: d.name,
-            correct: d.correct,
-            total: d.total,
-            percentage: d.percentage,
-            createdAt: d.createdAt?.toDate()?.toLocaleString() ?? null,
-            answers: d.answers ?? [],   // 👈 AÑADIDO
+          id: doc.id,
+          name: d.name,
+          correct: d.correct,
+          total: d.total,
+          percentage: d.percentage,
+          createdAt: d.createdAt?.toDate()?.toLocaleString() ?? null,
+          answers: d.answers ?? [],   // 👈 AÑADIDO
         };
-        });
+      });
 
 
       setAttempts(data);
@@ -89,79 +90,73 @@ export default function ActivityResultsPage({
   if (!activity) return null;
 
   return (
-    <main className="p-8 max-w-3xl mx-auto">
-      <AuthCard title={`Resultados — ${activity.title}`}>
+    <>
+      <Header title={`Resultados - ${activity.title}`} />
+      <main className="flex-1 pt-35">
+        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
 
-        <Button
-          variant="secondary"
-          className="mb-6"
-          onClick={() => router.push(`/dashboard/activities/${id}`)}
-        >
-          Volver al editor
-        </Button>
-
-        {/* TABLE OF ATTEMPTS */}
-        {attempts.length === 0 ? (
-          <p className="text-gray-500">Aún no hay intentos.</p>
-        ) : (
-          <table className="w-full border rounded-lg">
-            <thead>
-              <tr className="bg-gray-100">
-                <th className="p-2 text-left">Alumno</th>
-                <th className="p-2 text-left">Fecha</th>
-                <th className="p-2 text-left">Aciertos</th>
-                <th className="p-2 text-left">% Nota</th>
-              </tr>
-            </thead>
-            <tbody>
-              {attempts.map((a) => (
-                <tr key={a.id} className="border-t">
-                  <td className="p-2">{a.name}</td>
-                  <td className="p-2">{a.createdAt}</td>
-                  <td className="p-2">
-                    {a.correct}/{a.total}
-                  </td>
-                  <td className="p-2">{a.percentage}%</td>
+          {/* TABLE OF ATTEMPTS */}
+          {attempts.length === 0 ? (
+            <p className="text-gray-500">Aún no hay intentos.</p>
+          ) : (
+            <table className="w-full border rounded-lg">
+              <thead>
+                <tr className="bg-gray-100">
+                  <th className="p-2 text-left">Alumno</th>
+                  <th className="p-2 text-left">Fecha</th>
+                  <th className="p-2 text-left">Aciertos</th>
+                  <th className="p-2 text-left">% Nota</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-        {/* QUESTION STATISTICS */}
-        <div className="mt-10">
-        <h2 className="text-xl font-bold mb-4">Estadísticas por pregunta</h2>
+              </thead>
+              <tbody>
+                {attempts.map((a) => (
+                  <tr key={a.id} className="border-t">
+                    <td className="p-2">{a.name}</td>
+                    <td className="p-2">{a.createdAt}</td>
+                    <td className="p-2">
+                      {a.correct}/{a.total}
+                    </td>
+                    <td className="p-2">{a.percentage}%</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+          {/* QUESTION STATISTICS */}
+          <div className="mt-10">
+            <h2 className="text-xl font-bold mb-4">Estadísticas por pregunta</h2>
 
-        {activity.data.questions.map((q, index) => {
-            let total = attempts.length;
-            let correct = attempts.filter(
-            (a) => a.answers && a.answers[index] === q.correctIndex
-            ).length;
+            {activity.data.questions.map((q, index) => {
+              let total = attempts.length;
+              let correct = attempts.filter(
+                (a) => a.answers && a.answers[index] === q.correctIndex
+              ).length;
 
-            let percentage = total === 0 ? 0 : Math.round((correct / total) * 100);
+              let percentage = total === 0 ? 0 : Math.round((correct / total) * 100);
 
-            return (
-            <div key={index} className="border p-4 rounded-lg mb-4">
-                <h3 className="font-semibold">
-                Pregunta {index + 1}: {q.question}
-                </h3>
+              return (
+                <div key={index} className="border p-4 rounded-lg mb-4">
+                  <h3 className="font-semibold">
+                    Pregunta {index + 1}: {q.question}
+                  </h3>
 
-                <p className="mt-2 text-gray-700">
-                {correct} de {total} alumnos respondieron bien —{" "}
-                <strong>{percentage}%</strong>
-                </p>
+                  <p className="mt-2 text-gray-700">
+                    {correct} de {total} alumnos respondieron bien —{" "}
+                    <strong>{percentage}%</strong>
+                  </p>
 
-                <div
-                className={`mt-2 h-3 rounded-full ${
-                    percentage >= 60 ? "bg-green-400" : "bg-red-400"
-                }`}
-                style={{ width: `${percentage}%`, transition: "0.4s" }}
-                ></div>
-            </div>
-            );
-        })}
+                  <div
+                    className={`mt-2 h-3 rounded-full ${percentage >= 60 ? "bg-green-400" : "bg-red-400"
+                      }`}
+                    style={{ width: `${percentage}%`, transition: "0.4s" }}
+                  ></div>
+                </div>
+              );
+            })}
+          </div>
         </div>
+      </main>
+    </>
 
-      </AuthCard>
-    </main>
   );
 }

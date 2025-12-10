@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import NavBar from "@/components/NavBar";
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
 import { AuthProvider } from "@/context/AuthContext";
+import { Toaster } from "sonner";
+import LayoutClientWrapper from "@/components/LayoutClientWrapper";
+
 
 export const metadata: Metadata = {
   title: "Plataforma educativa",
@@ -17,20 +17,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es" className="h-full bg-gray-100">
-      <body className="h-full">
+      <body className="min-h-screen flex flex-col">
         <AuthProvider>
-
-          <div className="min-h-full">
-            {/* NAVBAR (100% react, igual al original de TailwindUI) */}
-            <NavBar />
-
-            {/* CONTENIDO PRINCIPAL */}
+          <Toaster position="bottom-right" richColors />
+          {/* Todo lo que depende del pathname se resuelve aquí */}
+          <LayoutClientWrapper>
             {children}
-
-            {/* FOOTER 
-            <Footer />*/}
-          </div>
-          
+          </LayoutClientWrapper>
         </AuthProvider>
       </body>
     </html>

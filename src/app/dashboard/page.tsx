@@ -16,30 +16,14 @@ export default function DashboardPage() {
 
   return (
     <>
-    <Header title="Dashboard" />
-    <main>
-      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-     CONTENIDO
-      </div>
-    </main>
-    <main className="min-h-screen p-8">
-      <h1 className="text-3xl font-bold mb-4">{t("welcome")}</h1>
-
-      <p className="text-gray-700 mb-6">
-        {t("sessionStartedAs")} <strong>{user?.email}</strong>
-      </p>
-
-      <div className="flex flex-col gap-4">
-        {/* 👉 Botón para ir a actividades */}
-        <Link href="/dashboard/activities">
-          <Button>{t("myActivities") ?? "Mis actividades"}</Button>
-        </Link>
-
-        {/* 👉 Botón de logout */}
-        <Button onClick={logoutUser}>
-          {t("logout")}
-        </Button>
-      </div>
-    </main></>
+      <Header title="Dashboard" />
+      <main className="flex-1 pt-35">
+        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+          <p className="text-gray-700 mb-6">
+            {t("sessionStartedAs")} <strong>{user?.email}</strong>
+          </p>
+        </div>
+      </main>
+    </>
   );
 }

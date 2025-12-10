@@ -12,6 +12,7 @@ import { AuthCard } from "@/components/AuthCard";
 import { toast } from "sonner";
 
 import Link from "next/link";
+import Header from "@/components/Header";
 
 type Question = {
   question: string;
@@ -87,14 +88,14 @@ export default function ActivityEditorPage({
     setActivity((prev) =>
       prev
         ? {
-            ...prev,
-            data: {
-              questions: [
-                ...prev.data.questions,
-                { question: "", options: ["", "", "", ""], correctIndex: 0 },
-              ],
-            },
-          }
+          ...prev,
+          data: {
+            questions: [
+              ...prev.data.questions,
+              { question: "", options: ["", "", "", ""], correctIndex: 0 },
+            ],
+          },
+        }
         : prev
     );
   }
@@ -104,13 +105,13 @@ export default function ActivityEditorPage({
     setActivity((prev) =>
       prev
         ? {
-            ...prev,
-            data: {
-              questions: prev.data.questions.map((q, i) =>
-                i === index ? { ...q, question: value } : q
-              ),
-            },
-          }
+          ...prev,
+          data: {
+            questions: prev.data.questions.map((q, i) =>
+              i === index ? { ...q, question: value } : q
+            ),
+          },
+        }
         : prev
     );
   }
@@ -120,20 +121,20 @@ export default function ActivityEditorPage({
     setActivity((prev) =>
       prev
         ? {
-            ...prev,
-            data: {
-              questions: prev.data.questions.map((q, i) =>
-                i === qIndex
-                  ? {
-                      ...q,
-                      options: q.options.map((o, j) =>
-                        j === optIndex ? value : o
-                      ),
-                    }
-                  : q
-              ),
-            },
-          }
+          ...prev,
+          data: {
+            questions: prev.data.questions.map((q, i) =>
+              i === qIndex
+                ? {
+                  ...q,
+                  options: q.options.map((o, j) =>
+                    j === optIndex ? value : o
+                  ),
+                }
+                : q
+            ),
+          },
+        }
         : prev
     );
   }
@@ -143,13 +144,13 @@ export default function ActivityEditorPage({
     setActivity((prev) =>
       prev
         ? {
-            ...prev,
-            data: {
-              questions: prev.data.questions.map((q, i) =>
-                i === qIndex ? { ...q, correctIndex: optIndex } : q
-              ),
-            },
-          }
+          ...prev,
+          data: {
+            questions: prev.data.questions.map((q, i) =>
+              i === qIndex ? { ...q, correctIndex: optIndex } : q
+            ),
+          },
+        }
         : prev
     );
   }
@@ -163,11 +164,11 @@ export default function ActivityEditorPage({
           setActivity((prev) =>
             prev
               ? {
-                  ...prev,
-                  data: {
-                    questions: prev.data.questions.filter((_, i) => i !== index),
-                  },
-                }
+                ...prev,
+                data: {
+                  questions: prev.data.questions.filter((_, i) => i !== index),
+                },
+              }
               : prev
           );
           toast.success("Pregunta eliminada");
@@ -181,15 +182,15 @@ export default function ActivityEditorPage({
     setActivity((prev) =>
       prev
         ? {
-            ...prev,
-            data: {
-              questions: [
-                ...prev.data.questions.slice(0, index + 1),
-                { ...prev.data.questions[index] },
-                ...prev.data.questions.slice(index + 1),
-              ],
-            },
-          }
+          ...prev,
+          data: {
+            questions: [
+              ...prev.data.questions.slice(0, index + 1),
+              { ...prev.data.questions[index] },
+              ...prev.data.questions.slice(index + 1),
+            ],
+          },
+        }
         : prev
     );
     toast.success("Pregunta duplicada");
@@ -234,159 +235,148 @@ export default function ActivityEditorPage({
   }
 
   return (
-    <div className="p-8">
-      {/* CABECERA DEL EDITOR */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold">Editor de actividad</h1>
-        <p className="text-gray-600 mt-1">
-          Configura la información general y edita las preguntas.
-        </p>
-      </div>
+    <>
+      <Header title={"Editando: " + activity.title || "Nueva actividad"} />
+      <main className="flex-1 pt-35">
+        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
 
-      {/* CONTENEDOR PRINCIPAL */}
-      <div className="space-y-8">
 
-        {/* INFORMACIÓN GENERAL */}
-        <section className="p-6 border rounded-xl bg-white">
-          <h2 className="text-xl font-semibold mb-4">Información general</h2>
+          {/* INFORMACIÓN GENERAL */}
+          <section className="p-6 border rounded-sm bg-white">
+            <h2 className="text-xl font-semibold mb-4">Información general</h2>
 
-          {/* Título */}
-          <Input
-            label="Título"
-            value={activity.title}
-            onChange={(e) =>
-              setActivity({ ...activity, title: e.target.value })
-            }
-          />
-
-          {/* Idioma */}
-          <div className="mt-4">
-            <label className="block font-medium">Idioma de la actividad</label>
-            <select
-              className="w-full p-2 border rounded-lg mt-1"
-              value={activity.language}
+            {/* Título */}
+            <Input
+              label="Título"
+              value={activity.title}
               onChange={(e) =>
-                setActivity({
-                  ...activity,
-                  language: e.target.value as "es" | "en",
-                })
+                setActivity({ ...activity, title: e.target.value })
               }
-            >
-              <option value="es">Español</option>
-              <option value="en">Inglés</option>
-            </select>
-          </div>
+            />
 
-          {/* Privacidad */}
-          <div className="mt-4">
-            <label className="block font-medium">Privacidad</label>
-            <div className="flex items-center space-x-2 mt-1">
-              <input
-                type="checkbox"
-                checked={activity.isPublic}
+            {/* Idioma */}
+            <div className="mt-4">
+              <label className="block font-medium">Idioma de la actividad</label>
+              <select
+                className="w-full p-2 border rounded-lg mt-1"
+                value={activity.language}
                 onChange={(e) =>
-                  setActivity({ ...activity, isPublic: e.target.checked })
+                  setActivity({
+                    ...activity,
+                    language: e.target.value as "es" | "en",
+                  })
                 }
-              />
-              <span>Hacer pública</span>
+              >
+                <option value="es">Español</option>
+                <option value="en">Inglés</option>
+              </select>
             </div>
-          </div>
-        </section>
 
-        {/* PREGUNTAS */}
-        <section className="p-6 border rounded-xl bg-white">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold">Preguntas</h2>
-          </div>
+            {/* Privacidad */}
+            <div className="mt-4">
+              <label className="block font-medium">Privacidad</label>
+              <div className="flex items-center space-x-2 mt-1">
+                <input
+                  type="checkbox"
+                  checked={activity.isPublic}
+                  onChange={(e) =>
+                    setActivity({ ...activity, isPublic: e.target.checked })
+                  }
+                />
+                <span>Hacer pública</span>
+              </div>
+            </div>
+          </section>
 
-          <div className="space-y-6">
-            {activity.data.questions.map((q, qIndex) => (
-              <div key={qIndex} className="border p-5 rounded-lg bg-gray-50">
+          {/* PREGUNTAS */}
+          <section className="p-6 mt-6 border rounded-sm bg-white">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold">Preguntas</h2>
+            </div>
 
-                {/* Cabecera */}
-                <div className="flex justify-between mb-3">
-                  <h3 className="font-semibold">
-                    Pregunta {qIndex + 1}
-                  </h3>
+            <div className="space-y-6">
+              {activity.data.questions.map((q, qIndex) => (
+                <div key={qIndex} className="border mb-6 p-5 rounded-sm bg-black-50">
 
-                  <div className="flex gap-2">
-                    <Button variant="secondary" onClick={() => moveQuestionUp(qIndex)}>
-                      ▲
-                    </Button>
-                    <Button variant="secondary" onClick={() => moveQuestionDown(qIndex)}>
-                      ▼
-                    </Button>
-                    <Button variant="secondary" onClick={() => duplicateQuestion(qIndex)}>
-                      Duplicar
-                    </Button>
-                    <Button variant="secondary" onClick={() => removeQuestion(qIndex)}>
-                      Eliminar
-                    </Button>
+                  {/* Cabecera */}
+                  <div className="flex justify-between mb-3">
+                    <h3 className="font-semibold">
+                      Pregunta {qIndex + 1}
+                    </h3>
+
+                    <div className="flex gap-2">
+                      <Button variant="secondary" onClick={() => moveQuestionUp(qIndex)}>
+                        ▲
+                      </Button>
+                      <Button variant="secondary" onClick={() => moveQuestionDown(qIndex)}>
+                        ▼
+                      </Button>
+                      <Button variant="secondary" onClick={() => duplicateQuestion(qIndex)}>
+                        Duplicar
+                      </Button>
+                      <Button variant="secondary" onClick={() => removeQuestion(qIndex)}>
+                        Eliminar
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Texto de la pregunta */}
+                  <Input
+                    label="Texto de la pregunta"
+                    value={q.question}
+                    onChange={(e) => updateQuestion(qIndex, e.target.value)}
+                  />
+
+                  {/* Opciones */}
+                  <div className="mt-4 space-y-4">
+                    {q.options.map((opt, optIndex) => (
+                      <div key={optIndex}>
+                        <Input
+                          label={"Opción " + (optIndex + 1)}
+                          value={opt}
+                          onChange={(e) =>
+                            updateOption(qIndex, optIndex, e.target.value)
+                          }
+                        />
+
+
+
+                        <label className="mt-1 flex items-center gap-2 text-sm">
+                          <input
+                            type="radio"
+                            name={`correct-${qIndex}`}
+                            checked={q.correctIndex === optIndex}
+                            onChange={() => setCorrect(qIndex, optIndex)}
+                          />
+                          Respuesta correcta
+                        </label>
+                      </div>
+                    ))}
                   </div>
                 </div>
+              ))}
+            </div>
 
-                {/* Texto de la pregunta */}
-                <Input
-                  label="Texto de la pregunta"
-                  value={q.question}
-                  onChange={(e) => updateQuestion(qIndex, e.target.value)}
-                />
+            {/* Botón agregar pregunta */}
+            <Button className="mt-6" onClick={addQuestion}>
+              Añadir pregunta
+            </Button>
+          </section>
 
-                {/* Opciones */}
-                <div className="mt-4 space-y-4">
-                  {q.options.map((opt, optIndex) => (
-                    <div key={optIndex}>
-                      <label className="block text-sm font-medium">
-                        Opción {optIndex + 1}
-                      </label>
+          {/* BOTONES INFERIORES */}
+          <div className="flex justify-between items-center pt-4">
+            <div />
 
-                      <input
-                        className="w-full p-2 border rounded-lg"
-                        value={opt}
-                        onChange={(e) =>
-                          updateOption(qIndex, optIndex, e.target.value)
-                        }
-                      />
-
-                      <label className="mt-1 flex items-center gap-2 text-sm">
-                        <input
-                          type="radio"
-                          name={`correct-${qIndex}`}
-                          checked={q.correctIndex === optIndex}
-                          onChange={() => setCorrect(qIndex, optIndex)}
-                        />
-                        Respuesta correcta
-                      </label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
+            <div className="flex gap-3">
+              {/* Guardar */}
+              <Button onClick={handleSave}>Guardar cambios</Button>
+            </div>
           </div>
 
-          {/* Botón agregar pregunta */}
-          <Button className="mt-6" onClick={addQuestion}>
-            Añadir pregunta
-          </Button>
-        </section>
 
-        {/* BOTONES INFERIORES */}
-        <div className="flex justify-between items-center pt-4">
-          <div />
-
-          <div className="flex gap-3">
-            {/* Botón PREVIEW */}
-            <Link href={`/dashboard/activities/${activity.id}/preview`}>
-              <Button variant="secondary">Preview</Button>
-            </Link>
-
-            {/* Guardar */}
-            <Button onClick={handleSave}>Guardar cambios</Button>
-          </div>
         </div>
-      </div>
-
-    </div>
+      </main>
+    </>
 
   );
 }

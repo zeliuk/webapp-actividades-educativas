@@ -6,6 +6,7 @@ import { getUserActivities, deleteActivity } from "@/lib/activitiesService";
 import { Button } from "@/components/ui/Button";
 import Link from "next/link";
 import { toast } from "sonner";
+import Header from "@/components/Header";
 
 type Activity = {
   id: string;
@@ -27,7 +28,7 @@ export default function ActivitiesPage() {
     const uid = user.uid;
 
     async function load() {
-      const data = await getUserActivities(uid); 
+      const data = await getUserActivities(uid);
       setActivities(data);
     }
 
@@ -41,61 +42,66 @@ export default function ActivitiesPage() {
   }
 
   return (
-    <div className="p-8">
-      <div className="flex justify-between mb-6">
-        <h1 className="text-2xl font-bold">Mis actividades</h1>
+    <>
+      <Header title="Mis actividades" />
+      <main className="flex-1 pt-35">
+        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
 
-        <Link href="/dashboard/activities/new">
-          <Button>Crear actividad</Button>
-        </Link>
-      </div>
 
-      <ul className="space-y-3">
-        {activities.map((a) => (
-          <li
-            key={a.id}
-            className="p-4 border rounded-lg flex justify-between items-center"
-          >
-            <div>
-              <h2 className="font-semibold">{a.title}</h2>
-              <p className="text-sm text-gray-500">{a.type}</p>
-            </div>
+          <ul className="space-y-3">
+            {activities.map((a) => (
+              <li
+                key={a.id}
+                className="p-4 border rounded-sm flex justify-between items-center bg-white"
+              >
+                <div>
+                  <h2 className="font-semibold">{a.title}</h2>
+                  <p className="text-sm text-gray-500">{a.type}</p>
+                </div>
 
-            <div className="space-x-2">
-                {/* Resultados */}
-                <Link href={`/dashboard/activities/${a.id}/results`}>
-                    <Button variant="secondary">Resultados</Button>
-                </Link>
+                <div className="space-x-2">
+                  {/* Resultados */}
+                  <Link href={`/dashboard/activities/${a.id}/results`}>
+                    <Button>Resultados</Button>
+                  </Link>
 
-                {/* Editar */}
-                <Link href={`/dashboard/activities/${a.id}`}>
+                  <Link href={`/dashboard/activities/${a.id}/preview`}>
+                    <Button variant="secondary">Preview</Button>
+                  </Link>
+
+                  {/* Editar */}
+                  <Link href={`/dashboard/activities/${a.id}`}>
                     <Button variant="secondary">Editar</Button>
-                </Link>                
+                  </Link>
 
-                {/* Eliminar */}
-                <Button
+                  {/* Eliminar */}
+                  <Button
                     variant="secondary"
                     onClick={() =>
-                        toast("¿Eliminar esta actividad?", {
+                      toast("¿Eliminar esta actividad?", {
                         action: {
-                            label: "Sí",
-                            onClick: () => handleDelete(a.id),
+                          label: "Sí",
+                          onClick: () => handleDelete(a.id),
                         },
-                        })
+                      })
                     }
-                    >
+                  >
                     Eliminar
-                </Button>
+                  </Button>
 
-            </div>
+                </div>
 
-          </li>
-        ))}
+              </li>
+            ))}
 
-        {activities.length === 0 && (
-          <p className="text-gray-600">Aún no has creado ninguna actividad.</p>
-        )}
-      </ul>
-    </div>
+            {activities.length === 0 && (
+              <p className="text-gray-600">Aún no has creado ninguna actividad.</p>
+            )}
+          </ul>
+
+        </div>
+      </main>
+    </>
+
   );
 }

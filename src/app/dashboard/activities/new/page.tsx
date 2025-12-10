@@ -13,6 +13,7 @@ import { AuthCard } from "@/components/AuthCard";
 
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import Header from "@/components/Header";
 
 const newActivitySchema = z.object({
   title: z.string().min(3, "Debe tener al menos 3 caracteres"),
@@ -54,43 +55,47 @@ export default function NewActivityPage() {
   }
 
   return (
-    <main className="min-h-screen p-8 flex justify-center">
-      <AuthCard title="Crear actividad">
-        <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
-          <Input
-            label="Título"
-            {...register("title")}
-            error={formState.errors.title?.message}
-          />
+    <>
+      <Header title="Crear actividad" />
+      <main className="flex-1 pt-35">
+        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
 
-          <div>
-            <label className="block mb-1 font-medium">Tipo</label>
-            <select {...register("type")} className="w-full p-2 border rounded-lg">
-              <option value="quiz">Quiz</option>
-            </select>
-          </div>
+          <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+            <Input
+              label="Título"
+              {...register("title")}
+              error={formState.errors.title?.message}
+            />
 
-          <div>
-            <label className="block mb-1 font-medium">Idioma de la actividad</label>
-            <select
+            <div>
+              <label className="block mb-1 font-medium">Tipo</label>
+              <select {...register("type")} className="w-full p-2 border rounded-lg">
+                <option value="quiz">Quiz</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block mb-1 font-medium">Idioma de la actividad</label>
+              <select
                 {...register("language")}
                 className="w-full p-2 border rounded-lg"
-            >
+              >
                 <option value="es">Español</option>
                 <option value="en">Inglés</option>
-            </select>
+              </select>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <input type="checkbox" id="isPublic" {...register("isPublic")} />
+              <label htmlFor="isPublic">Hacer pública</label>
+            </div>
+
+            <Button type="submit" full disabled={formState.isSubmitting}>
+              Crear actividad
+            </Button>
+          </form>
         </div>
-
-          <div className="flex items-center space-x-2">
-            <input type="checkbox" id="isPublic" {...register("isPublic")} />
-            <label htmlFor="isPublic">Hacer pública</label>
-          </div>
-
-          <Button type="submit" full disabled={formState.isSubmitting}>
-            Crear actividad
-          </Button>
-        </form>
-      </AuthCard>
-    </main>
+      </main>
+    </>
   );
 }

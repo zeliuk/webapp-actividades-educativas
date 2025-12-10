@@ -4,10 +4,12 @@ import { use, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getActivityById } from "@/lib/activitiesService";
 import { AuthCard } from "@/components/AuthCard";
+import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { toast } from "sonner";
 import { db } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import Header from "@/components/Header";
 
 type Question = {
   question: string;
@@ -47,34 +49,34 @@ export default function ActivityPublicPage({
   // Cargar actividad
   useEffect(() => {
     async function load() {
-        const result = (await getActivityById(id)) as any;
+      const result = (await getActivityById(id)) as any;
 
-        // SOLO comprobamos si existe, NO si es pública
-        if (!result) {
+      // SOLO comprobamos si existe, NO si es pública
+      if (!result) {
         toast.error("Actividad no encontrada");
         router.push("/");
         return;
-        }
+      }
 
-        setActivity({
+      setActivity({
         id: result.id,
         title: result.title,
         language: result.language ?? "es",
         isPublic: result.isPublic ?? false, // este campo ya no afecta acceso
         data: {
-            questions: Array.isArray(result.data?.questions)
+          questions: Array.isArray(result.data?.questions)
             ? result.data.questions
             : [],
         },
-        });
+      });
 
-        setAnswers(
+      setAnswers(
         Array(result.data?.questions?.length ?? 0).fill(null)
-        );
+      );
     }
 
     load();
-    }, [id, router]);
+  }, [id, router]);
 
 
   // Seleccionar una respuesta
@@ -130,31 +132,37 @@ export default function ActivityPublicPage({
   // PANTALLA 1 — Pedir nombre
   if (!confirmedName) {
     return (
-      <main className="p-8 max-w-md mx-auto">
-        <AuthCard title="Antes de comenzar">
-          <p className="mb-4 text-gray-600">Introduce tu nombre para continuar:</p>
+      <>
+        <main className="flex-1">
+          <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+            <AuthCard title="Antes de comenzar">
 
-          <input
-            className="border p-2 rounded w-full mb-4"
-            placeholder="Tu nombre"
-            value={studentName}
-            onChange={(e) => setStudentName(e.target.value)}
-          />
+              <div className="space-y-4">
+                <Input
+                  label="Introduce tu nombre para continuar:"
+                  value={studentName}
+                  onChange={(e) => setStudentName(e.target.value)}
+                />
 
-          <Button
-            full
-            onClick={() => {
-              if (!studentName.trim()) {
-                toast.error("Escribe tu nombre");
-                return;
-              }
-              setConfirmedName(true);
-            }}
-          >
-            Empezar actividad
-          </Button>
-        </AuthCard>
-      </main>
+
+
+                <Button
+                  full
+                  onClick={() => {
+                    if (!studentName.trim()) {
+                      toast.error("Escribe tu nombre");
+                      return;
+                    }
+                    setConfirmedName(true);
+                  }}
+                >
+                  Empezar actividad
+                </Button>
+              </div>
+            </AuthCard>
+          </div>
+        </main>
+      </>
     );
   }
 
@@ -162,15 +170,16 @@ export default function ActivityPublicPage({
 
   // PANTALLA 2 — Actividad interactiva
   return (
-    <main className="p-8 max-w-2xl mx-auto">
-      <AuthCard title={activity.title}>
+    <main className="flex-1">
+      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+
         <p className="text-sm text-gray-500 mb-4">
           Alumno: <strong>{studentName}</strong>
         </p>
 
         {/* LISTA DE PREGUNTAS INTERACTIVA */}
         {activity.data.questions.map((q, i) => (
-          <div key={i} className="border p-4 rounded-lg mb-4">
+          <div key={i} className="border p-4 rounded-lg mb-4  bg-white">
             <h3 className="font-semibold mb-2">Pregunta {i + 1}</h3>
             <p className="mb-3">{q.question}</p>
 
@@ -227,7 +236,7 @@ export default function ActivityPublicPage({
             </p>
           </div>
         )}
-      </AuthCard>
+      </div>
     </main>
   );
 }
