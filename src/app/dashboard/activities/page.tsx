@@ -65,6 +65,17 @@ export default function ActivitiesPage() {
                     <Button>Resultados</Button>
                   </Link>
 
+                  <Button
+                    variant="secondary"
+                    onClick={async () => {
+                      const url = `${window.location.origin}/a/${a.id}`;
+                      await navigator.clipboard.writeText(url);
+                      toast.success("Enlace copiado al portapapeles");
+                    }}
+                  >
+                    Copiar enlace para alumnos
+                  </Button>
+
                   <Link href={`/dashboard/activities/${a.id}/preview`}>
                     <Button variant="secondary">Preview</Button>
                   </Link>

@@ -33,7 +33,7 @@ export default function RegisterPage() {
   async function onSubmit(data: RegisterForm) {
     try {
       await registerWithEmail(data.email, data.password);
-      router.push("/dashboard");
+      router.push("/dashboard/activities");
     } catch (error: any) {
       toast.error(error.message);
     }
@@ -42,7 +42,7 @@ export default function RegisterPage() {
   async function handleGoogle() {
     try {
       await loginWithGoogle();
-      router.push("/dashboard");
+      router.push("/dashboard/activities");
     } catch (error: any) {
       toast.error(error.message);
     }

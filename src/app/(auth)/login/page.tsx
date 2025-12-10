@@ -34,7 +34,7 @@ export default function LoginPage() {
   async function onSubmit(data: LoginForm) {
     try {
       await loginWithEmail(data.email, data.password);
-      router.push("/dashboard");
+      router.push("/dashboard/activities");
     } catch (error: any) {
       toast.error(error.message);
     }
@@ -43,7 +43,7 @@ export default function LoginPage() {
   async function handleGoogle() {
     try {
       await loginWithGoogle();
-      router.push("/dashboard");
+      router.push("/dashboard/activities");
     } catch (error: any) {
       toast.error(error.message);
     }
