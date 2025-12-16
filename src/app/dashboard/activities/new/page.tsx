@@ -46,6 +46,7 @@ export default function NewActivityPage() {
       const resp = await createActivity({
         ...data,
         ownerId: user.uid,
+        name: user.displayName || user.email || "Anónimo",
         data: {
           questions: [],
           anagrams: [],

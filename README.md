@@ -110,7 +110,10 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow get: if request.auth != null;
+      allow create, update, delete: if request.auth != null &&
+        request.auth.uid == userId;
+      allow list: if false;
     }
 
     match /activities/{activityId} {

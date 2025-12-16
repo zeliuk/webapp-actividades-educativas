@@ -6,6 +6,7 @@ type Activity = {
   title?: string;
   type?: string;
   language?: string;
+  name?: string;
   ownerName?: string;
 };
 
@@ -29,11 +30,9 @@ export default function PublicActivityCard({
           {activity.type} · {activity.language}
         </span>
         <h3 className="text-lg font-semibold">{activity.title}</h3>
-        {activity.ownerName && (
-          <span className="text-sm text-gray-500">
-            Autor: {activity.ownerName}
-          </span>
-        )}
+        <span className="text-sm text-gray-500">
+          Autor: {activity.ownerName?.trim() || activity.name?.trim() || "Anónimo"}
+        </span>
       </div>
 
       <div className="flex flex-wrap gap-2">

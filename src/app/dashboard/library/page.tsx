@@ -8,13 +8,18 @@ import { getPublicActivities, forkActivity } from "@/lib/activitiesService";
 import { toast } from "sonner";
 import PublicActivityCard from "@/components/PublicActivityCard";
 import { Select } from "@/components/ui/Select";
+import { Button } from "@/components/ui/Button";
+import { db } from "@/lib/firebase";
+import { doc, getDoc } from "firebase/firestore";
 
 type Activity = {
   id: string;
   title?: string;
   type?: string;
   language?: string;
+  name?: string;
   ownerName?: string;
+  ownerId?: string;
 };
 
 export default function LibraryPage() {
@@ -45,7 +50,45 @@ export default function LibraryPage() {
         }
 
         const data = await getPublicActivities(filters);
-        setActivities(data);
+        const filtered = user
+          ? data.filter((activity) => activity.ownerId !== user.uid)
+          : data;
+
+        const ownerIds = Array.from(
+          new Set(
+            filtered
+              .map((activity) => activity.ownerId)
+              .filter((id): id is string => Boolean(id))
+          )
+        );
+
+        const ownersMap: Record<string, string> = {};
+        await Promise.all(
+          ownerIds.map(async (ownerId) => {
+            try {
+              const userRef = doc(db, "users", ownerId);
+              const snapshot = await getDoc(userRef);
+              if (snapshot.exists()) {
+                const userData = snapshot.data() as { name?: string };
+                ownersMap[ownerId] = userData?.name?.trim() || "Anónimo";
+              } else {
+                ownersMap[ownerId] = "Anónimo";
+              }
+            } catch (error) {
+              console.error("Error obteniendo autor", error);
+              ownersMap[ownerId] = "Anónimo";
+            }
+          })
+        );
+
+        const withOwners = filtered.map((activity) => ({
+          ...activity,
+          ownerName: activity.ownerId
+            ? ownersMap[activity.ownerId] || "Anónimo"
+            : "Anónimo",
+        }));
+
+        setActivities(withOwners);
       } catch (err) {
         console.error(err);
         setError("No se pudieron cargar las actividades públicas.");
@@ -112,6 +155,18 @@ export default function LibraryPage() {
                 <option value="es">Español</option>
                 <option value="en">Inglés</option>
               </Select>
+            </div>
+
+            <div className="w-full sm:w-auto flex items-end">
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  setTypeFilter("all");
+                  setLanguageFilter("all");
+                }}
+              >
+                Reiniciar filtros
+              </Button>
             </div>
           </section>
 

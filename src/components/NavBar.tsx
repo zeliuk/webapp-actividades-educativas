@@ -47,6 +47,7 @@ export default function NavBar() {
             {/* DESKTOP NAV LINKS */}
             <div className="hidden md:block">
               <div className="ml-10 flex items-baseline space-x-4">
+                <NavLink href="/dashboard/library">Comunidad</NavLink>
                 <NavLink href="/dashboard/activities">Mis actividades</NavLink>
                 <NavLink href="/dashboard/activities/new">Crear actividad</NavLink>
               </div>
@@ -162,6 +163,7 @@ export default function NavBar() {
               setMobileOpen(false);
             }
           }}>
+          <NavLinkMobile href="/dashboard/library">Comunidad</NavLinkMobile>
           <NavLinkMobile href="/dashboard/activities">Mis actividades</NavLinkMobile>
           <NavLinkMobile href="/dashboard/activities/new">Crear actividad</NavLinkMobile>
 

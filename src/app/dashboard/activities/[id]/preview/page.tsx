@@ -5,6 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import {
   ensureActivitySlug,
+  forkActivity,
   getActivityById,
 } from "@/lib/activitiesService";
 import { Button } from "@/components/ui/Button";
@@ -217,6 +218,28 @@ export default function PreviewPage({
                 }}
               >
                 Copiar enlace para alumnos
+              </Button>
+            </div>
+          )}
+
+          {!isOwner && activity && user && (
+            <div className="mt-6 flex justify-end">
+              <Button
+                onClick={async () => {
+                  try {
+                    const newId = await forkActivity(activity.id, {
+                      uid: user.uid,
+                      displayName: user.displayName || undefined,
+                    });
+                    toast.success("Actividad duplicada en tu cuenta");
+                    router.push(`/dashboard/activities/${newId}`);
+                  } catch (error) {
+                    console.error(error);
+                    toast.error("No se pudo duplicar la actividad");
+                  }
+                }}
+              >
+                Duplicar en mi cuenta
               </Button>
             </div>
           )}
