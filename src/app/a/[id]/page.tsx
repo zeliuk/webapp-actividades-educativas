@@ -371,6 +371,32 @@ export default function ActivityPublicPage({
     }
   }, [activity, slotPlacements, submitted, submitAnswers]);
 
+  useEffect(() => {
+    if (
+      submitted ||
+      !activity ||
+      activity.type !== "quiz" ||
+      answeredQuestions.length === 0
+    ) {
+      return;
+    }
+
+    const totalQuestions = activity.data.questions.length;
+    if (totalQuestions === 0) return;
+
+    const allAnswered =
+      answeredQuestions.length === totalQuestions &&
+      answeredQuestions.every(Boolean);
+
+    if (!allAnswered) return;
+
+    const timer = window.setTimeout(() => {
+      submitAnswers();
+    }, 1400);
+
+    return () => window.clearTimeout(timer);
+  }, [activity, answeredQuestions, submitted, submitAnswers]);
+
   // Seleccionar una respuesta
   function selectAnswer(qIndex: number, optIndex: number) {
     if (submitted || activity?.type !== "quiz") return; // No permitir cambiar después de enviar
@@ -395,16 +421,12 @@ export default function ActivityPublicPage({
       window.clearTimeout(quizAdvanceTimeout.current);
     }
 
+    if (qIndex >= totalQuestions - 1) {
+      return;
+    }
+
     quizAdvanceTimeout.current = window.setTimeout(() => {
       if (!activity || activity.type !== "quiz") return;
-      if (allAnswered) {
-        submitAnswers(updatedAnswers);
-        return;
-      }
-      if (qIndex >= totalQuestions - 1) {
-        submitAnswers(updatedAnswers);
-        return;
-      }
       setCurrentIndex((prev) => Math.min(totalQuestions - 1, prev + 1));
     }, 1400);
   }
