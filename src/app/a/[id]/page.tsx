@@ -9,7 +9,7 @@ import {
   type DragEvent,
 } from "react";
 import { useRouter } from "next/navigation";
-import { getActivityById } from "@/lib/activitiesService";
+import { getActivityBySlugOrId } from "@/lib/activitiesService";
 import { AuthCard } from "@/components/AuthCard";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
@@ -211,7 +211,7 @@ export default function ActivityPublicPage({
   // Cargar actividad
   useEffect(() => {
     async function load() {
-      const result = (await getActivityById(id)) as Activity | null;
+      const result = (await getActivityBySlugOrId(id)) as Activity | null;
 
       // SOLO comprobamos si existe, NO si es pública
       if (!result) {

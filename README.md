@@ -157,7 +157,7 @@ service cloud.firestore {
 - ✔ Selección de idioma de actividad  
 - ✔ Privacidad para compartir entre docentes  
 - ✔ Vista previa del profesor  
-- ✔ Copiar enlace para compartir con alumnos  
+- ✔ Copiar enlace para compartir con alumnos (usa slug público)  
 
 ### 📌 Editor Visual de Quiz
 - ✔ Añadir preguntas  
@@ -174,7 +174,7 @@ service cloud.firestore {
 - ✔ Previsualizar el orden en que se mostrarán al alumnado  
 - ✔ Todas las palabras se guardan dentro de `data.anagrams` para cada actividad  
 
-### 📌 Vista Alumnado `/a/[id]`
+### 📌 Vista Alumnado `/a/[slug]`
 - ✔ Acceso siempre disponible sin login  
 - ✔ Pantalla para introducir nombre  
 - ✔ Interfaz interactiva de respuesta  

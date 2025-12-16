@@ -3,7 +3,10 @@
 import { use, useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
-import { getActivityById } from "@/lib/activitiesService";
+import {
+  ensureActivitySlug,
+  getActivityById,
+} from "@/lib/activitiesService";
 import { Button } from "@/components/ui/Button";
 import { toast } from "sonner";
 import Header from "@/components/Header";
@@ -24,6 +27,7 @@ type AnagramPuzzle = {
 type Activity = {
   id: string;
   ownerId?: string;
+  publicSlug?: string;
   title: string;
   language: "es" | "en";
   type: ActivityType;
@@ -60,6 +64,7 @@ export default function PreviewPage({
       setActivity({
         id: result.id,
         ownerId: result.ownerId,
+        publicSlug: result.publicSlug,
         title: result.title,
         language: result.language ?? "es",
         type: (result.type ?? "quiz") as ActivityType,
@@ -187,16 +192,26 @@ export default function PreviewPage({
           )}
 
           {/* Bottom buttons */}
-          {isOwner && (
+          {isOwner && activity && (
             <div className="mt-6 flex justify-between">
-              <Button onClick={() => router.push(`/dashboard/activities/${id}`)}>
+              <Button
+                onClick={() => router.push(`/dashboard/activities/${activity.id}`)}
+              >
                 Volver al editor
               </Button>
 
               <Button
                 variant="secondary"
                 onClick={async () => {
-                  const url = `${window.location.origin}/a/${id}`;
+                  const slug =
+                    activity.publicSlug ??
+                    (await ensureActivitySlug(activity.id));
+                  if (!activity.publicSlug) {
+                    setActivity((prev) =>
+                      prev ? { ...prev, publicSlug: slug } : prev
+                    );
+                  }
+                  const url = `${window.location.origin}/a/${slug}`;
                   await navigator.clipboard.writeText(url);
                   toast.success("Enlace copiado al portapapeles");
                 }}
