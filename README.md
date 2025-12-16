@@ -168,6 +168,12 @@ service cloud.firestore {
 - ✔ Definir respuesta correcta  
 - ✔ Guardado completo en Firestore  
 
+### 📌 Editor Visual de Anagramas
+- ✔ Añadir varias palabras y pistas individuales  
+- ✔ Reordenar o eliminar palabras fácilmente  
+- ✔ Previsualizar el orden en que se mostrarán al alumnado  
+- ✔ Todas las palabras se guardan dentro de `data.anagrams` para cada actividad  
+
 ### 📌 Vista Alumnado `/a/[id]`
 - ✔ Acceso siempre disponible sin login  
 - ✔ Pantalla para introducir nombre  
@@ -178,11 +184,24 @@ service cloud.firestore {
 - ✔ Mensajes motivacionales  
 - ✔ Reintentar actividad  
 
+#### 🧠 Modo Quiz
+- Auto‑avance tras responder (con feedback verde/rojo antes de pasar a la siguiente)
+- Bloqueo de cambios una vez respondida cada pregunta
+- Envío automático al completar todas las preguntas, incluso si solo hay una
+- Resumen final resaltando respuestas correctas e incorrectas
+
+#### 🔤 Modo Anagramas
+- Presenta letras desordenadas con arrastrar/soltar, clics o teclado
+- Casillas vacías muestran el progreso palabra a palabra
+- Temporizador global y estado “Palabra completada”
+- Se puede saltar entre palabras y volver cuando se desee
+
 ### 📌 Intentos guardados en Firestore
 - ✔ Subcolección `attempts` por actividad  
 - ✔ Guarda nombre del alumno  
-- ✔ Guarda respuestas, aciertos y porcentaje  
+- ✔ Guarda respuestas, aciertos y porcentaje (Quiz y Anagram)  
 - ✔ Timestamp automático  
+- ✔ Almacena la duración total del intento  
 - ✔ Compatible con alumnos sin cuenta  
 
 ### 📌 Resultados del Profesor
