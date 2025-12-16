@@ -8,11 +8,11 @@ import { getActivityById, updateActivity } from "@/lib/activitiesService";
 
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
-import { AuthCard } from "@/components/AuthCard";
 import { toast } from "sonner";
 
-import Link from "next/link";
 import Header from "@/components/Header";
+
+type ActivityType = "quiz" | "anagram";
 
 type Question = {
   question: string;
@@ -20,14 +20,20 @@ type Question = {
   correctIndex: number;
 };
 
+type AnagramPuzzle = {
+  word: string;
+  hint: string;
+};
+
 type Activity = {
   id: string;
   title: string;
-  type: string;
+  type: ActivityType;
   isPublic: boolean;
   language: "es" | "en";
   data: {
     questions: Question[];
+    anagrams: AnagramPuzzle[];
   };
 };
 
@@ -59,12 +65,15 @@ export default function ActivityEditorPage({
       setActivity({
         id: result.id,
         title: result.title ?? "",
-        type: result.type ?? "quiz",
+        type: (result.type ?? "quiz") as ActivityType,
         isPublic: result.isPublic ?? false,
         language: (result.language ?? "es") as "es" | "en",
         data: {
           questions: Array.isArray(result.data?.questions)
             ? result.data.questions
+            : [],
+          anagrams: Array.isArray(result.data?.anagrams)
+            ? result.data.anagrams
             : [],
         },
       });
@@ -90,6 +99,7 @@ export default function ActivityEditorPage({
         ? {
           ...prev,
           data: {
+            ...prev.data,
             questions: [
               ...prev.data.questions,
               { question: "", options: ["", "", "", ""], correctIndex: 0 },
@@ -107,6 +117,7 @@ export default function ActivityEditorPage({
         ? {
           ...prev,
           data: {
+            ...prev.data,
             questions: prev.data.questions.map((q, i) =>
               i === index ? { ...q, question: value } : q
             ),
@@ -123,6 +134,7 @@ export default function ActivityEditorPage({
         ? {
           ...prev,
           data: {
+            ...prev.data,
             questions: prev.data.questions.map((q, i) =>
               i === qIndex
                 ? {
@@ -146,6 +158,7 @@ export default function ActivityEditorPage({
         ? {
           ...prev,
           data: {
+            ...prev.data,
             questions: prev.data.questions.map((q, i) =>
               i === qIndex ? { ...q, correctIndex: optIndex } : q
             ),
@@ -166,6 +179,7 @@ export default function ActivityEditorPage({
               ? {
                 ...prev,
                 data: {
+                  ...prev.data,
                   questions: prev.data.questions.filter((_, i) => i !== index),
                 },
               }
@@ -184,6 +198,7 @@ export default function ActivityEditorPage({
         ? {
           ...prev,
           data: {
+            ...prev.data,
             questions: [
               ...prev.data.questions.slice(0, index + 1),
               { ...prev.data.questions[index] },
@@ -209,7 +224,7 @@ export default function ActivityEditorPage({
         questions[index - 1],
       ];
 
-      return { ...prev, data: { questions } };
+      return { ...prev, data: { ...prev.data, questions } };
     });
   }
 
@@ -226,7 +241,108 @@ export default function ActivityEditorPage({
         questions[index + 1],
       ];
 
-      return { ...prev, data: { questions } };
+      return { ...prev, data: { ...prev.data, questions } };
+    });
+  }
+
+  // Añadir palabra de anagrama
+  function addAnagram() {
+    setActivity((prev) =>
+      prev
+        ? {
+          ...prev,
+          data: {
+            ...prev.data,
+            anagrams: [...prev.data.anagrams, { word: "", hint: "" }],
+          },
+        }
+        : prev
+    );
+  }
+
+  function updateAnagramWord(index: number, value: string) {
+    setActivity((prev) =>
+      prev
+        ? {
+          ...prev,
+          data: {
+            ...prev.data,
+            anagrams: prev.data.anagrams.map((item, i) =>
+              i === index ? { ...item, word: value } : item
+            ),
+          },
+        }
+        : prev
+    );
+  }
+
+  function updateAnagramHint(index: number, value: string) {
+    setActivity((prev) =>
+      prev
+        ? {
+          ...prev,
+          data: {
+            ...prev.data,
+            anagrams: prev.data.anagrams.map((item, i) =>
+              i === index ? { ...item, hint: value } : item
+            ),
+          },
+        }
+        : prev
+    );
+  }
+
+  function moveAnagramUp(index: number) {
+    if (index === 0) return;
+
+    setActivity((prev) => {
+      if (!prev) return prev;
+
+      const anagrams = [...prev.data.anagrams];
+      [anagrams[index - 1], anagrams[index]] = [
+        anagrams[index],
+        anagrams[index - 1],
+      ];
+
+      return { ...prev, data: { ...prev.data, anagrams } };
+    });
+  }
+
+  function moveAnagramDown(index: number) {
+    if (!activity || index === activity.data.anagrams.length - 1) return;
+
+    setActivity((prev) => {
+      if (!prev) return prev;
+
+      const anagrams = [...prev.data.anagrams];
+      [anagrams[index + 1], anagrams[index]] = [
+        anagrams[index],
+        anagrams[index + 1],
+      ];
+
+      return { ...prev, data: { ...prev.data, anagrams } };
+    });
+  }
+
+  function removeAnagram(index: number) {
+    toast("¿Eliminar esta palabra?", {
+      action: {
+        label: "Sí",
+        onClick: () => {
+          setActivity((prev) =>
+            prev
+              ? {
+                ...prev,
+                data: {
+                  ...prev.data,
+                  anagrams: prev.data.anagrams.filter((_, i) => i !== index),
+                },
+              }
+              : prev
+          );
+          toast.success("Palabra eliminada");
+        },
+      },
     });
   }
 
@@ -253,6 +369,22 @@ export default function ActivityEditorPage({
                 setActivity({ ...activity, title: e.target.value })
               }
             />
+
+            {/* Tipo (solo lectura) */}
+            <div className="mt-4">
+              <label className="block font-medium">Tipo de actividad</label>
+              <select
+                className="w-full p-2 border rounded-lg mt-1 bg-gray-50 text-gray-600"
+                value={activity.type}
+                disabled
+              >
+                <option value="quiz">Quiz de opción múltiple</option>
+                <option value="anagram">Anagramas</option>
+              </select>
+              <p className="text-xs text-gray-500 mt-1">
+                El tipo se define al crear la actividad.
+              </p>
+            </div>
 
             {/* Idioma */}
             <div className="mt-4">
@@ -288,80 +420,126 @@ export default function ActivityEditorPage({
             </div>
           </section>
 
-          {/* PREGUNTAS */}
-          <section className="p-6 mt-6 border rounded-sm bg-white">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold">Preguntas</h2>
-            </div>
+          {activity.type === "quiz" ? (
+            <section className="p-6 mt-6 border rounded-sm bg-white">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-semibold">Preguntas</h2>
+              </div>
 
-            <div className="space-y-6">
-              {activity.data.questions.map((q, qIndex) => (
-                <div key={qIndex} className="border mb-6 p-5 rounded-sm bg-black-50">
+              <div className="space-y-6">
+                {activity.data.questions.map((q, qIndex) => (
+                  <div key={qIndex} className="border mb-6 p-5 rounded-sm bg-black-50">
 
-                  {/* Cabecera */}
-                  <div className="flex justify-between mb-3">
-                    <h3 className="font-semibold">
-                      Pregunta {qIndex + 1}
-                    </h3>
+                    {/* Cabecera */}
+                    <div className="flex justify-between mb-3">
+                      <h3 className="font-semibold">
+                        Pregunta {qIndex + 1}
+                      </h3>
 
-                    <div className="flex gap-2">
-                      <Button variant="secondary" onClick={() => moveQuestionUp(qIndex)}>
-                        ▲
-                      </Button>
-                      <Button variant="secondary" onClick={() => moveQuestionDown(qIndex)}>
-                        ▼
-                      </Button>
-                      <Button variant="secondary" onClick={() => duplicateQuestion(qIndex)}>
-                        Duplicar
-                      </Button>
-                      <Button variant="secondary" onClick={() => removeQuestion(qIndex)}>
-                        Eliminar
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button variant="secondary" onClick={() => moveQuestionUp(qIndex)}>
+                          ▲
+                        </Button>
+                        <Button variant="secondary" onClick={() => moveQuestionDown(qIndex)}>
+                          ▼
+                        </Button>
+                        <Button variant="secondary" onClick={() => duplicateQuestion(qIndex)}>
+                          Duplicar
+                        </Button>
+                        <Button variant="secondary" onClick={() => removeQuestion(qIndex)}>
+                          Eliminar
+                        </Button>
+                      </div>
+                    </div>
+
+                    {/* Texto de la pregunta */}
+                    <Input
+                      label="Texto de la pregunta"
+                      value={q.question}
+                      onChange={(e) => updateQuestion(qIndex, e.target.value)}
+                    />
+
+                    {/* Opciones */}
+                    <div className="mt-4 space-y-4">
+                      {q.options.map((opt, optIndex) => (
+                        <div key={optIndex}>
+                          <Input
+                            label={"Opción " + (optIndex + 1)}
+                            value={opt}
+                            onChange={(e) =>
+                              updateOption(qIndex, optIndex, e.target.value)
+                            }
+                          />
+
+
+
+                          <label className="mt-1 flex items-center gap-2 text-sm">
+                            <input
+                              type="radio"
+                              name={`correct-${qIndex}`}
+                              checked={q.correctIndex === optIndex}
+                              onChange={() => setCorrect(qIndex, optIndex)}
+                            />
+                            Respuesta correcta
+                          </label>
+                        </div>
+                      ))}
                     </div>
                   </div>
+                ))}
+              </div>
 
-                  {/* Texto de la pregunta */}
-                  <Input
-                    label="Texto de la pregunta"
-                    value={q.question}
-                    onChange={(e) => updateQuestion(qIndex, e.target.value)}
-                  />
+              {/* Botón agregar pregunta */}
+              <Button className="mt-6" onClick={addQuestion}>
+                Añadir pregunta
+              </Button>
+            </section>
+          ) : (
+            <section className="p-6 mt-6 border rounded-sm bg-white">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-semibold">Palabras del anagrama</h2>
+              </div>
 
-                  {/* Opciones */}
-                  <div className="mt-4 space-y-4">
-                    {q.options.map((opt, optIndex) => (
-                      <div key={optIndex}>
-                        <Input
-                          label={"Opción " + (optIndex + 1)}
-                          value={opt}
-                          onChange={(e) =>
-                            updateOption(qIndex, optIndex, e.target.value)
-                          }
-                        />
-
-
-
-                        <label className="mt-1 flex items-center gap-2 text-sm">
-                          <input
-                            type="radio"
-                            name={`correct-${qIndex}`}
-                            checked={q.correctIndex === optIndex}
-                            onChange={() => setCorrect(qIndex, optIndex)}
-                          />
-                          Respuesta correcta
-                        </label>
+              <div className="space-y-6">
+                {activity.data.anagrams.map((item, index) => (
+                  <div key={index} className="border mb-6 p-5 rounded-sm bg-black-50">
+                    <div className="flex justify-between mb-3">
+                      <h3 className="font-semibold">Palabra {index + 1}</h3>
+                      <div className="flex gap-2">
+                        <Button variant="secondary" onClick={() => moveAnagramUp(index)}>
+                          ▲
+                        </Button>
+                        <Button variant="secondary" onClick={() => moveAnagramDown(index)}>
+                          ▼
+                        </Button>
+                        <Button variant="secondary" onClick={() => removeAnagram(index)}>
+                          Eliminar
+                        </Button>
                       </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
+                    </div>
 
-            {/* Botón agregar pregunta */}
-            <Button className="mt-6" onClick={addQuestion}>
-              Añadir pregunta
-            </Button>
-          </section>
+                    <Input
+                      label="Palabra objetivo"
+                      value={item.word}
+                      onChange={(e) => updateAnagramWord(index, e.target.value)}
+                    />
+
+                    <div className="mt-4">
+                      <Input
+                        label="Pista (opcional)"
+                        value={item.hint}
+                        onChange={(e) => updateAnagramHint(index, e.target.value)}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <Button className="mt-6" onClick={addAnagram}>
+                Añadir palabra
+              </Button>
+            </section>
+          )}
 
           {/* BOTONES INFERIORES */}
           <div className="flex justify-between items-center pt-4">

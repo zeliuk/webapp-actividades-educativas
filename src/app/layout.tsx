@@ -16,7 +16,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es" className="h-full bg-gray-100">
+    <html lang="es" className="h-full bg-gray-100" suppressHydrationWarning>
       <body className="min-h-screen flex flex-col">
         <AuthProvider>
           <Toaster position="bottom-right" richColors />
