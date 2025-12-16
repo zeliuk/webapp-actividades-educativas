@@ -36,7 +36,7 @@ export default function PublicActivityCard({
       </div>
 
       <div className="flex flex-wrap gap-2">
-        <Link href={previewHref} target="_blank" rel="noreferrer">
+        <Link href={previewHref} rel="noreferrer">
           <Button variant="secondary">Vista previa</Button>
         </Link>
         <Button onClick={onDuplicate} disabled={duplicating}>
