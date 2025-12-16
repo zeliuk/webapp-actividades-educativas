@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { getActivityById, updateActivity } from "@/lib/activitiesService";
 
 import { Input } from "@/components/ui/Input";
+import { Select } from "@/components/ui/Select";
 import { Button } from "@/components/ui/Button";
 import { toast } from "sonner";
 
@@ -58,6 +59,12 @@ export default function ActivityEditorPage({
 
       if (!result) {
         toast.error("Actividad no encontrada");
+        router.push("/dashboard/activities");
+        return;
+      }
+
+      if (result.ownerId && result.ownerId !== user?.uid) {
+        toast.error("No tienes permisos para editar esta actividad");
         router.push("/dashboard/activities");
         return;
       }
@@ -372,25 +379,21 @@ export default function ActivityEditorPage({
 
             {/* Tipo (solo lectura) */}
             <div className="mt-4">
-              <label className="block font-medium">Tipo de actividad</label>
-              <select
-                className="w-full p-2 border rounded-lg mt-1 bg-gray-50 text-gray-600"
+              <Select
+                label="Tipo de actividad"
                 value={activity.type}
                 disabled
+                helperText="El tipo se define al crear la actividad."
               >
                 <option value="quiz">Quiz de opción múltiple</option>
                 <option value="anagram">Anagramas</option>
-              </select>
-              <p className="text-xs text-gray-500 mt-1">
-                El tipo se define al crear la actividad.
-              </p>
+              </Select>
             </div>
 
             {/* Idioma */}
             <div className="mt-4">
-              <label className="block font-medium">Idioma de la actividad</label>
-              <select
-                className="w-full p-2 border rounded-lg mt-1"
+              <Select
+                label="Idioma de la actividad"
                 value={activity.language}
                 onChange={(e) =>
                   setActivity({
@@ -401,7 +404,7 @@ export default function ActivityEditorPage({
               >
                 <option value="es">Español</option>
                 <option value="en">Inglés</option>
-              </select>
+              </Select>
             </div>
 
             {/* Privacidad */}

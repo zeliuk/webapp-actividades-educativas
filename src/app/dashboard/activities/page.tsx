@@ -2,7 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { getUserActivities, deleteActivity } from "@/lib/activitiesService";
+import {
+  getUserActivities,
+  deleteActivity,
+  ensureActivitySlug,
+} from "@/lib/activitiesService";
 import { Button } from "@/components/ui/Button";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -13,6 +17,7 @@ type Activity = {
   title?: string;
   type?: string;
   isPublic?: boolean;
+  publicSlug?: string;
   data?: any;
 };
 
@@ -68,7 +73,17 @@ export default function ActivitiesPage() {
                   <Button
                     variant="secondary"
                     onClick={async () => {
-                      const url = `${window.location.origin}/a/${a.id}`;
+                      const slug =
+                        a.publicSlug ??
+                        (await ensureActivitySlug(a.id).then((value) => {
+                          setActivities((prev) =>
+                            prev.map((item) =>
+                              item.id === a.id ? { ...item, publicSlug: value } : item
+                            )
+                          );
+                          return value;
+                        }));
+                      const url = `${window.location.origin}/a/${slug}`;
                       await navigator.clipboard.writeText(url);
                       toast.success("Enlace copiado al portapapeles");
                     }}
