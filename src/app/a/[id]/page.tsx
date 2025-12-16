@@ -120,6 +120,7 @@ export default function ActivityPublicPage({
 
   // Respuestas del alumno
   const [answers, setAnswers] = useState<(number | string | null)[]>([]);
+  const answersRef = useRef<(number | string | null)[]>([]);
   const [scrambledWords, setScrambledWords] = useState<string[][]>([]);
   const [slotPlacements, setSlotPlacements] = useState<
     (SlotPlacement | null)[][]
@@ -157,13 +158,16 @@ export default function ActivityPublicPage({
   const currentIsLast = totalItems > 0 ? currentIndex === totalItems - 1 : false;
   const submitAnswers = useCallback(
     (overrideAnswers?: (number | string | null)[]) => {
-      if (!activity) return;
+      if (!activity || submitted) return;
       if (quizAdvanceTimeout.current) {
         window.clearTimeout(quizAdvanceTimeout.current);
         quizAdvanceTimeout.current = null;
       }
 
-      const snapshot = overrideAnswers ?? answers;
+      const sourceAnswers =
+        overrideAnswers ??
+        (answers.length > 0 ? answers : answersRef.current);
+      const snapshot = [...sourceAnswers];
 
       let correct = 0;
       let attemptAnswers: (number | string | null)[] = snapshot;
@@ -190,14 +194,19 @@ export default function ActivityPublicPage({
 
         attemptAnswers = wordResponses;
         setAnswers(wordResponses);
+        answersRef.current = wordResponses;
       }
 
-      setScore(correct);
       setSubmitted(true);
+      setScore(correct);
       saveAttempt(correct, attemptAnswers);
     },
-    [activity, answers, slotPlacements]
+    [activity, slotPlacements, answers, submitted]
   );
+
+  useEffect(() => {
+    answersRef.current = answers;
+  }, [answers]);
 
   // Cargar actividad
   useEffect(() => {
@@ -237,6 +246,7 @@ export default function ActivityPublicPage({
 
       if (type === "quiz") {
         setAnswers(Array(questions.length).fill(null));
+        answersRef.current = Array(questions.length).fill(null);
         setScrambledWords([]);
         setSlotPlacements([]);
         setAnsweredQuestions(Array(questions.length).fill(false));
@@ -245,6 +255,7 @@ export default function ActivityPublicPage({
       } else {
         const scrambled = anagrams.map((item) => buildScrambledWord(item.word));
         setAnswers(Array(anagrams.length).fill(""));
+        answersRef.current = Array(anagrams.length).fill("");
         setScrambledWords(scrambled);
         setSlotPlacements(anagrams.map((item) => buildSlotTemplate(item.word)));
         setAnsweredQuestions([]);
@@ -368,6 +379,7 @@ export default function ActivityPublicPage({
     const updatedAnswers = answers.slice();
     updatedAnswers[qIndex] = optIndex;
     setAnswers(updatedAnswers);
+    answersRef.current = updatedAnswers;
 
     const totalQuestions = activity?.data.questions.length ?? 0;
     const base =
@@ -404,6 +416,7 @@ export default function ActivityPublicPage({
       setAnswers((prev) => {
         const copy = [...prev];
         copy[wordIndex] = built;
+        answersRef.current = copy;
         return copy;
       });
     },
