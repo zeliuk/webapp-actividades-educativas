@@ -49,7 +49,7 @@ export default function LibraryPage() {
           filters.language = languageFilter;
         }
 
-        const data = await getPublicActivities(filters);
+        const data = (await getPublicActivities(filters)) as Activity[];
         const filtered = user
           ? data.filter((activity) => activity.ownerId !== user.uid)
           : data;

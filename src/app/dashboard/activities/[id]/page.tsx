@@ -63,7 +63,7 @@ export default function ActivityEditorPage({
         return;
       }
 
-      if (result.ownerId && result.ownerId !== user.uid) {
+      if (result.ownerId && result.ownerId !== user?.uid) {
         toast.error("No tienes permisos para editar esta actividad");
         router.push("/dashboard/activities");
         return;
