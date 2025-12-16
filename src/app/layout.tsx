@@ -6,8 +6,30 @@ import LayoutClientWrapper from "@/components/LayoutClientWrapper";
 
 
 export const metadata: Metadata = {
-  title: "Plataforma educativa",
-  description: "Descripción...",
+  title: "EduApp - Actividades educativas",
+  description: "Plataforma para que Marian pueda crear y compartir actividades educativas entre docentes.",
+  openGraph: {
+    title: "EduApp - Actividades educativas",
+    description:
+      "Plataforma para que Marian pueda crear y compartir actividades educativas entre docentes.",
+    url: "https://actividades.zeliuk.xyz",
+    siteName: "EduApp",
+    images: [
+      {
+        url: "/148980.png",
+        width: 512,
+        height: 512,
+        alt: "EduApp",
+      },
+    ],
+    locale: "es_ES",
+    type: "website",
+  },
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/148980.png",
+  },
 };
 
 export default function RootLayout({
