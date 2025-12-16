@@ -9,15 +9,16 @@ import { createActivity } from "@/lib/activitiesService";
 
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
-import { AuthCard } from "@/components/AuthCard";
 
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import Header from "@/components/Header";
 
+const activityTypes = ["quiz", "anagram"] as const;
+
 const newActivitySchema = z.object({
   title: z.string().min(3, "Debe tener al menos 3 caracteres"),
-  type: z.enum(["quiz"]),
+  type: z.enum(activityTypes),
   isPublic: z.boolean().optional(),
   language: z.enum(["es", "en"]),
 });
@@ -44,12 +45,15 @@ export default function NewActivityPage() {
       const resp = await createActivity({
         ...data,
         ownerId: user.uid,
-        data: { questions: [] },
+        data: {
+          questions: [],
+          anagrams: [],
+        },
       });
 
       toast.success("Actividad creada");
       router.push(`/dashboard/activities/${resp.id}`);
-    } catch (err) {
+    } catch {
       toast.error("Error al crear la actividad");
     }
   }
@@ -69,8 +73,12 @@ export default function NewActivityPage() {
 
             <div>
               <label className="block mb-1 font-medium">Tipo</label>
-              <select {...register("type")} className="w-full p-2 border rounded-lg">
-                <option value="quiz">Quiz</option>
+              <select
+                {...register("type")}
+                className="w-full p-2 border rounded-lg"
+              >
+                <option value="quiz">Quiz de opción múltiple</option>
+                <option value="anagram">Anagramas</option>
               </select>
             </div>
 
