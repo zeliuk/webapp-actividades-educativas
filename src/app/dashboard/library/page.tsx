@@ -4,12 +4,10 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
 import { useAuth } from "@/context/AuthContext";
-import {
-  getPublicActivities,
-  forkActivity,
-} from "@/lib/activitiesService";
+import { getPublicActivities, forkActivity } from "@/lib/activitiesService";
 import { toast } from "sonner";
 import PublicActivityCard from "@/components/PublicActivityCard";
+import { Select } from "@/components/ui/Select";
 
 type Activity = {
   id: string;
@@ -88,12 +86,9 @@ export default function LibraryPage() {
       <main className="flex-1 pt-35">
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 space-y-6">
           <section className="flex flex-wrap gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Tipo
-              </label>
-              <select
-                className="mt-1 block w-48 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            <div className="w-full sm:w-64">
+              <Select
+                label="Tipo"
                 value={typeFilter}
                 onChange={(e) =>
                   setTypeFilter(e.target.value as "all" | "quiz" | "anagram")
@@ -102,15 +97,12 @@ export default function LibraryPage() {
                 <option value="all">Todos</option>
                 <option value="quiz">Quiz</option>
                 <option value="anagram">Anagrama</option>
-              </select>
+              </Select>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Idioma
-              </label>
-              <select
-                className="mt-1 block w-48 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            <div className="w-full sm:w-64">
+              <Select
+                label="Idioma"
                 value={languageFilter}
                 onChange={(e) =>
                   setLanguageFilter(e.target.value as "all" | "es" | "en")
@@ -119,7 +111,7 @@ export default function LibraryPage() {
                 <option value="all">Todos</option>
                 <option value="es">Español</option>
                 <option value="en">Inglés</option>
-              </select>
+              </Select>
             </div>
           </section>
 
@@ -135,7 +127,7 @@ export default function LibraryPage() {
               <PublicActivityCard
                 key={activity.id}
                 activity={activity}
-                previewHref={`/a/${activity.id}`}
+                previewHref={`/dashboard/activities/${activity.id}/preview`}
                 duplicating={duplicatingId === activity.id}
                 onDuplicate={() => handleDuplicate(activity.id)}
               />

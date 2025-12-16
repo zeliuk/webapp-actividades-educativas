@@ -8,6 +8,7 @@ import { useAuth } from "@/context/AuthContext";
 import { createActivity } from "@/lib/activitiesService";
 
 import { Input } from "@/components/ui/Input";
+import { Select } from "@/components/ui/Select";
 import { Button } from "@/components/ui/Button";
 
 import { useRouter } from "next/navigation";
@@ -71,27 +72,15 @@ export default function NewActivityPage() {
               error={formState.errors.title?.message}
             />
 
-            <div>
-              <label className="block mb-1 font-medium">Tipo</label>
-              <select
-                {...register("type")}
-                className="w-full p-2 border rounded-lg"
-              >
-                <option value="quiz">Quiz de opción múltiple</option>
-                <option value="anagram">Anagramas</option>
-              </select>
-            </div>
+            <Select label="Tipo" {...register("type")}>
+              <option value="quiz">Quiz de opción múltiple</option>
+              <option value="anagram">Anagramas</option>
+            </Select>
 
-            <div>
-              <label className="block mb-1 font-medium">Idioma de la actividad</label>
-              <select
-                {...register("language")}
-                className="w-full p-2 border rounded-lg"
-              >
-                <option value="es">Español</option>
-                <option value="en">Inglés</option>
-              </select>
-            </div>
+            <Select label="Idioma de la actividad" {...register("language")}>
+              <option value="es">Español</option>
+              <option value="en">Inglés</option>
+            </Select>
 
             <div className="flex items-center space-x-2">
               <input type="checkbox" id="isPublic" {...register("isPublic")} />

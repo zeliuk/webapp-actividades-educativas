@@ -124,7 +124,7 @@ export async function forkActivity(
     language: data.language,
     data: clonedData,
     ownerId: currentUser.uid,
-    ownerName: currentUser.displayName || data.ownerName,
+    ownerName: currentUser.displayName ?? data.ownerName ?? null,
     isPublic: false,
     forkedFrom: activityId,
     createdAt: serverTimestamp(),

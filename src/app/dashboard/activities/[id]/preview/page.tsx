@@ -23,6 +23,7 @@ type AnagramPuzzle = {
 
 type Activity = {
   id: string;
+  ownerId?: string;
   title: string;
   language: "es" | "en";
   type: ActivityType;
@@ -58,6 +59,7 @@ export default function PreviewPage({
 
       setActivity({
         id: result.id,
+        ownerId: result.ownerId,
         title: result.title,
         language: result.language ?? "es",
         type: (result.type ?? "quiz") as ActivityType,
@@ -93,6 +95,10 @@ export default function PreviewPage({
     activity?.type === "anagram" && totalItems > 0
       ? activity.data.anagrams[currentIndex]
       : null;
+
+  const isOwner = Boolean(
+    user?.uid && activity?.ownerId && user.uid === activity.ownerId
+  );
 
   if (!activity) return <p className="p-8">Cargando...</p>;
 
@@ -181,26 +187,24 @@ export default function PreviewPage({
           )}
 
           {/* Bottom buttons */}
-          <div className="mt-6 flex justify-between">
-            <Button onClick={() => router.push(`/dashboard/activities/${id}`)}>
-              Volver al editor
-            </Button>
+          {isOwner && (
+            <div className="mt-6 flex justify-between">
+              <Button onClick={() => router.push(`/dashboard/activities/${id}`)}>
+                Volver al editor
+              </Button>
 
-            <Button
-              variant="secondary"
-              onClick={async () => {
-                const url = `${window.location.origin}/a/${id}`;
-                await navigator.clipboard.writeText(url);
-                toast.success("Enlace copiado al portapapeles");
-              }}
-            >
-              Copiar enlace para alumnos
-            </Button>
-
-
-
-
-          </div>
+              <Button
+                variant="secondary"
+                onClick={async () => {
+                  const url = `${window.location.origin}/a/${id}`;
+                  await navigator.clipboard.writeText(url);
+                  toast.success("Enlace copiado al portapapeles");
+                }}
+              >
+                Copiar enlace para alumnos
+              </Button>
+            </div>
+          )}
 
 
         </div>
